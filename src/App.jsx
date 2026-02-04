@@ -1,6 +1,5 @@
-import React from "react";
-import Example from "./example";
+import Scene from "./components/elements/scene/scene";
 
 export default function App() {
-  return <Example />;
+  return <Scene />;
 }

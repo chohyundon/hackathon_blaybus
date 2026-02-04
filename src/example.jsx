@@ -1,345 +1,299 @@
-import {
-  useMemo,
-  useRef,
-  useState,
-  useCallback,
-  createContext,
-  useContext,
-} from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import {
-  OrbitControls,
-  useGLTF,
-  Environment,
-  ContactShadows,
-} from "@react-three/drei";
-import * as THREE from "three";
+// import {
+//   useMemo,
+//   useRef,
+//   useState,
+//   useCallback,
+//   createContext,
+//   useContext,
+// } from "react";
+// import { Canvas, useFrame, useThree } from "@react-three/fiber";
+// import {
+//   OrbitControls,
+//   useGLTF,
+//   Environment,
+//   ContactShadows,
+// } from "@react-three/drei";
+// import * as THREE from "three";
+// import { partNameToV4Key } from "./utils/utils";
 
-/* ======================= Assets ======================= */
-import crankshaftUrl from "./assets/3DAsset/V4_Engine/Crankshaft.glb?url";
-import connectingRodUrl from "./assets/3DAsset/V4_Engine/Connecting Rod.glb?url";
-import connectingRodCapUrl from "./assets/3DAsset/V4_Engine/Connecting Rod Cap.glb?url";
-import conrodBoltUrl from "./assets/3DAsset/V4_Engine/Conrod Bolt.glb?url";
-import pistonPinUrl from "./assets/3DAsset/V4_Engine/Piston Pin.glb?url";
-import pistonRingUrl from "./assets/3DAsset/V4_Engine/Piston Ring.glb?url";
-import pistonUrl from "./assets/3DAsset/V4_Engine/Piston.glb?url";
+// /* ======================= Assets ======================= */
+// import crankshaftUrl from "./assets/3DAsset/V4_Engine/Crankshaft.glb?url";
+// import connectingRodUrl from "./assets/3DAsset/V4_Engine/Connecting Rod.glb?url";
+// import connectingRodCapUrl from "./assets/3DAsset/V4_Engine/Connecting Rod Cap.glb?url";
+// import conrodBoltUrl from "./assets/3DAsset/V4_Engine/Conrod Bolt.glb?url";
+// import pistonPinUrl from "./assets/3DAsset/V4_Engine/Piston Pin.glb?url";
+// import pistonRingUrl from "./assets/3DAsset/V4_Engine/Piston Ring.glb?url";
+// import pistonUrl from "./assets/3DAsset/V4_Engine/Piston.glb?url";
+// import { v4 } from "./mock/v4";
 
-const U = {
-  CRANKSHAFT: crankshaftUrl,
-  ROD: connectingRodUrl,
-  ROD_CAP: connectingRodCapUrl,
-  BOLT: conrodBoltUrl,
-  PIN: pistonPinUrl,
-  RING: pistonRingUrl,
-  PISTON: pistonUrl,
-};
+// const U = {
+//   CRANKSHAFT: crankshaftUrl,
+//   ROD: connectingRodUrl,
+//   ROD_CAP: connectingRodCapUrl,
+//   BOLT: conrodBoltUrl,
+//   PIN: pistonPinUrl,
+//   RING: pistonRingUrl,
+//   PISTON: pistonUrl,
+// };
 
-/* ======================= Utils ======================= */
-const easeInOutCubic = (t) =>
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+// const CYLINDER_BASE_POSITIONS = [
+//   [0.155, 0.15, -0.03],
+//   [0.27, 0.24, 0.035],
+//   [0.385, 0.24, 0.035],
+//   [0.499, 0.15, -0.03],
+// ];
 
-/* ======================= Context ======================= */
-const ExplodeContext = createContext({ isExploded: false });
-const useExplode = () => useContext(ExplodeContext);
+// const CYLINDER_ROD_POSITIONS = [
+//   [0, Math.PI / 2, -0.15],
+//   [0.2, Math.PI / 2, -0.01],
+//   [0.2, Math.PI / 2, -0.01],
+//   [0, Math.PI / 2, -0.15],
+// ];
 
-const PartClickContext = createContext({
-  onPartClick: null,
-  selectedPart: null,
-  selectedPartPosition: null,
-  resetView: null,
-  resetCameraRequest: false,
-  setResetCameraRequest: null,
-});
-const usePartClick = () => useContext(PartClickContext);
+// const CYLINDER_ROD_CAP_POSITIONS = [
+//   [0.155, 0.15, -0.03],
+//   [0.27, 0.24, 0.035],
+//   [0.385, 0.24, 0.035],
+//   [0.499, 0.15, -0.03],
+// ];
 
-/* ======================= Const ======================= */
-const CAMERA_DEFAULT_POSITION = new THREE.Vector3(-11, 10, 10);
-const CAMERA_ZOOM_DISTANCE = 4;
-const ROD_ROT = [0, Math.PI / 2, 0];
-const color = "#aaaaaa";
+// const CYLINDER_ROD_CAP_ROTATION = [
+//   [0, Math.PI / 2, -0.15],
+//   [0.2, Math.PI / 2, -0.01],
+//   [0.2, Math.PI / 2, -0.01],
+//   [0, Math.PI / 2, -0.15],
+// ];
 
-const BOLT_POSITIONS = [
-  { pos: [0, -0.251, -0.04], rot: [0, 1, 0] },
-  { pos: [0, -0.251, 0.04], rot: [0, 1, 0] },
-  { pos: [0, -0.315, 0.04], rot: [Math.PI, 1, 0] },
-  { pos: [0, -0.315, -0.04], rot: [Math.PI, 1, 0] },
-];
+// /* ======================= Utils ======================= */
+// const easeInOutCubic = (t) =>
+//   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-const RING_POSITIONS = [
-  [0, -0.0412, 0],
-  [0, -0.0296, 0],
-  [0, -0.0528, 0],
-];
+// /* ======================= Context ======================= */
+// const ExplodeContext = createContext({ isExploded: false });
+// const useExplode = () => useContext(ExplodeContext);
 
-const CYLINDER_ASSEMBLIES = [
-  { base: [0.0005, 0.15, 0], offset: [0.15, 0.25, 0.08] },
-  { base: [-0.345, 0.15, 0], offset: [0, 0.22, 0.05] },
-  { base: [-0.23, 0.25, 0], offset: [0, 0.18, 0.04] },
-  { base: [-0.115, 0.25, 0], offset: [-0.12, 0.18, -0.05] },
-];
+// const PartClickContext = createContext({});
+// const usePartClick = () => useContext(PartClickContext);
 
-/* ======================= AnimatedGroup ======================= */
-function AnimatedGroup({ basePosition, explodeOffset, children }) {
-  const ref = useRef();
-  const progress = useRef(0);
-  const { isExploded } = useExplode();
+// /* ======================= Const ======================= */
+// const CAMERA_DEFAULT_POSITION = new THREE.Vector3(-11, 10, 10);
+// const CAMERA_ZOOM_DISTANCE = 4;
+// const color = "#aaaaaa";
+// const selectedColor = "#ff0000";
 
-  useFrame((_, delta) => {
-    const target = isExploded ? 1 : 0;
-    progress.current += (target - progress.current) * Math.min(delta * 1.5, 1);
-    const t = easeInOutCubic(progress.current);
-    ref.current.position.set(
-      basePosition[0] + explodeOffset[0] * t,
-      basePosition[1] + explodeOffset[1] * t,
-      basePosition[2] + explodeOffset[2] * t
-    );
-  });
+// /* ======================= AnimatedGroup ======================= */
+// function AnimatedGroup({ basePosition, explodeOffset, children }) {
+//   const ref = useRef();
+//   const progress = useRef(0);
+//   const { isExploded } = useExplode();
 
-  return <group ref={ref}>{children}</group>;
-}
+//   useFrame((_, delta) => {
+//     const target = isExploded ? 1 : 0;
+//     progress.current += (target - progress.current) * Math.min(delta * 1.5, 1);
+//     const t = easeInOutCubic(progress.current);
+//     ref.current.position.set(
+//       basePosition[0] + explodeOffset[0] * t,
+//       basePosition[1] + explodeOffset[1] * t,
+//       basePosition[2] + explodeOffset[2] * t
+//     );
+//   });
 
-/* ======================= CloneWithClick ======================= */
-function CloneWithClick({ object, onClick }) {
-  if (object.isMesh) {
-    return (
-      <primitive
-        object={object}
-        onClick={(e) => {
-          e.stopPropagation();
-          const pos = new THREE.Vector3();
-          e.object.getWorldPosition(pos);
-          onClick(e, pos);
-        }}
-      />
-    );
-  }
-  return (
-    <primitive object={object}>
-      {object.children.map((c) => (
-        <CloneWithClick key={c.uuid} object={c} onClick={onClick} />
-      ))}
-    </primitive>
-  );
-}
+//   return <group ref={ref}>{children}</group>;
+// }
 
-/* ======================= Model ======================= */
-function Model({ url, position, rotation, partName, color }) {
-  const { onPartClick } = usePartClick();
-  const { scene } = useGLTF(url);
+// /* ======================= CloneWithClick ======================= */
+// function CloneWithClick({ object, onClick }) {
+//   if (object.isMesh) {
+//     return (
+//       <primitive
+//         object={object}
+//         onClick={(e) => {
+//           e.stopPropagation();
+//           const pos = new THREE.Vector3();
+//           e.object.getWorldPosition(pos);
+//           onClick(e, pos);
+//         }}
+//       />
+//     );
+//   }
+//   return (
+//     <primitive object={object}>
+//       {object.children.map((c) => (
+//         <CloneWithClick key={c.uuid} object={c} onClick={onClick} />
+//       ))}
+//     </primitive>
+//   );
+// }
 
-  const clone = useMemo(() => {
-    const cloned = scene.clone(true);
+// /* ======================= Model ======================= */
+// function Model({ url, position, rotation, partName, color }) {
+//   const { onPartClick } = usePartClick();
+//   const { scene } = useGLTF(url);
 
-    if (color) {
-      cloned.traverse((child) => {
-        if (child.isMesh) {
-          child.material = new THREE.MeshStandardMaterial({
-            color,
-            metalness: 0.8,
-            roughness: 0.1,
-          });
-          child.castShadow = true;
-          child.receiveShadow = true;
-        }
-      });
-    }
-    return cloned;
-  }, [scene, color]);
+//   const clone = useMemo(() => {
+//     const cloned = scene.clone(true);
+//     cloned.traverse((child) => {
+//       if (child.isMesh) {
+//         child.material = new THREE.MeshStandardMaterial({
+//           color,
+//           metalness: 0.8,
+//           roughness: 0.1,
+//         });
+//       }
+//     });
+//     return cloned;
+//   }, [scene, color]);
 
-  return (
-    <group position={position} rotation={rotation}>
-      <CloneWithClick
-        object={clone}
-        onClick={(e, worldPos) => onPartClick(e, partName, worldPos)}
-      />
-    </group>
-  );
-}
+//   return (
+//     <group position={position} rotation={rotation}>
+//       <CloneWithClick
+//         object={clone}
+//         onClick={(e, worldPos) => onPartClick(e, partName, worldPos)}
+//       />
+//     </group>
+//   );
+// }
 
-/* ======================= CylinderAssembly ======================= */
-function CylinderAssembly({ basePosition, explodeOffset, index }) {
-  const { onPartClick } = usePartClick();
+// /* ======================= CylinderAssembly ======================= */
+// function CylinderAssembly({ index, explodeProgress }) {
+//   const { selectedPart } = usePartClick();
 
-  return (
-    <AnimatedGroup basePosition={basePosition} explodeOffset={explodeOffset}>
-      <Model
-        url={U.ROD}
-        position={[0, -0.08, 0]}
-        rotation={ROD_ROT}
-        partName={`rod-${index}`}
-        color={color}
-      />
+//   // 1️⃣ 실린더 기준 위치
+//   const basePos = new THREE.Vector3(...CYLINDER_BASE_POSITIONS[index]);
 
-      <Model
-        url={U.ROD_CAP}
-        position={[0, -0.28, 0]}
-        rotation={ROD_ROT}
-        partName={`rodCap-${index}`}
-        color={color}
-      />
+//   // 2️⃣ 분해 방향
+//   const explodeDir = new THREE.Vector3(-0.4, 0.6, 0.2).normalize();
 
-      {BOLT_POSITIONS.map((b, i) => (
-        <Model
-          key={i}
-          url={U.BOLT}
-          position={b.pos}
-          rotation={b.rot}
-          partName={`bolt-${index}-${i}`}
-          color={color}
-        />
-      ))}
+//   // 3️⃣ 진행도 (실린더별 딜레이)
+//   const t = Math.max(0, explodeProgress - index * 0.15);
 
-      <Model
-        url={U.PIN}
-        position={[0.04, -0.08, 0]}
-        rotation={ROD_ROT}
-        partName={`pin-${index}`}
-        color={color}
-      />
+//   // 4️⃣ 위치 계산
+//   const rodPos = basePos.clone().add(explodeDir.clone().multiplyScalar(t));
 
-      {RING_POSITIONS.map((p, i) => (
-        <Model
-          key={i}
-          url={U.RING}
-          position={p}
-          partName={`ring-${index}-${i}`}
-          color={color}
-        />
-      ))}
+//   const rodCapPos = basePos
+//     .clone()
+//     .add(explodeDir.clone().multiplyScalar(t * 0.8));
 
-      <Model
-        url={U.PISTON}
-        position={[0, -0.108, 0]}
-        rotation={ROD_ROT}
-        partName={`piston-${index}`}
-        color={color}
-      />
-    </AnimatedGroup>
-  );
-}
+//   // 5️⃣ 회전 계산
+//   const rodRot = [
+//     CYLINDER_ROD_POSITIONS[index][0] + t * 0.8,
+//     CYLINDER_ROD_POSITIONS[index][1],
+//     CYLINDER_ROD_POSITIONS[index][2] + t * 0.4,
+//   ];
 
-/* ======================= CameraZoom ======================= */
-function CameraZoom({ controlsRef }) {
-  const { camera } = useThree();
-  const { selectedPartPosition, resetCameraRequest, setResetCameraRequest } =
-    usePartClick();
+//   const rodCapRot = [
+//     CYLINDER_ROD_CAP_ROTATION[index][0],
+//     CYLINDER_ROD_CAP_ROTATION[index][1] + t * 0.6,
+//     CYLINDER_ROD_CAP_ROTATION[index][2],
+//   ];
 
-  useFrame((_, delta) => {
-    if (resetCameraRequest) {
-      camera.position.lerp(CAMERA_DEFAULT_POSITION, delta * 4);
-      camera.lookAt(0, 0, 0);
-      controlsRef.current?.target.lerp(new THREE.Vector3(), 0.2);
-      if (camera.position.distanceTo(CAMERA_DEFAULT_POSITION) < 0.05) {
-        camera.position.copy(CAMERA_DEFAULT_POSITION);
-        setResetCameraRequest(false);
-      }
-      return;
-    }
+//   return (
+//     <>
+//       <Model
+//         url={U.ROD}
+//         position={rodPos.toArray()}
+//         rotation={rodRot}
+//         partName={`rod-${index}`}
+//         color={selectedPart === `rod-${index}` ? selectedColor : color}
+//       />
 
-    if (!selectedPartPosition) return;
+//       <Model
+//         url={U.ROD_CAP}
+//         position={rodCapPos.toArray()}
+//         rotation={rodCapRot}
+//         partName={`rod-cap-${index}`}
+//         color={selectedPart === `rod-cap-${index}` ? selectedColor : color}
+//       />
+//     </>
+//   );
+// }
 
-    const dir = camera.position.clone().sub(selectedPartPosition).normalize();
+// /* ======================= CameraZoom ======================= */
+// function CameraZoom({ controlsRef }) {
+//   const { camera } = useThree();
+//   const { selectedPartPosition } = usePartClick();
 
-    const targetPos = selectedPartPosition
-      .clone()
-      .add(dir.multiplyScalar(CAMERA_ZOOM_DISTANCE));
+//   useFrame((_, delta) => {
+//     if (!selectedPartPosition) return;
 
-    camera.position.lerp(targetPos, delta * 4);
-    camera.lookAt(selectedPartPosition);
-    controlsRef.current?.target.lerp(selectedPartPosition, 0.2);
-  });
+//     const dir = camera.position.clone().sub(selectedPartPosition).normalize();
+//     const target = selectedPartPosition
+//       .clone()
+//       .add(dir.multiplyScalar(CAMERA_ZOOM_DISTANCE));
 
-  return null;
-}
+//     camera.position.lerp(target, delta * 4);
+//     camera.lookAt(selectedPartPosition);
+//     controlsRef.current?.target.lerp(selectedPartPosition, 0.2);
+//   });
 
-/* ======================= Root ======================= */
-export default function Scene() {
-  const [isExploded, setIsExploded] = useState(false);
-  const [selectedPart, setSelectedPart] = useState(null);
-  const [selectedPartPosition, setSelectedPartPosition] = useState(null);
-  const [resetCameraRequest, setResetCameraRequest] = useState(false);
+//   return null;
+// }
 
-  const controlsRef = useRef();
+// /* ======================= Root ======================= */
+// export default function Scene() {
+//   const [isExploded, setIsExploded] = useState(false);
+//   const [explodeProgress, setExplodeProgress] = useState(0);
+//   const [selectedPart, setSelectedPart] = useState(null);
+//   const [selectedPartPosition, setSelectedPartPosition] = useState(null);
 
-  const onPartClick = useCallback((_, name, pos) => {
-    setSelectedPart(name);
-    setSelectedPartPosition(pos.clone());
-  }, []);
+//   const engineRef = useRef();
+//   const controlsRef = useRef();
 
-  const resetView = () => {
-    setSelectedPart(null);
-    setSelectedPartPosition(null);
-    setResetCameraRequest(true);
-  };
+//   const onPartClick = useCallback((_, name, pos) => {
+//     setSelectedPart(name);
+//     setSelectedPartPosition(pos.clone());
+//   }, []);
 
-  console.log(selectedPart);
+//   return (
+//     <ExplodeContext.Provider value={{ isExploded }}>
+//       <PartClickContext.Provider
+//         value={{ onPartClick, selectedPart, selectedPartPosition }}>
+//         {/* UI */}
+//         <div style={{ position: "fixed", top: 20, left: 20, zIndex: 10 }}>
+//           <input
+//             type="range"
+//             min={0}
+//             max={1}
+//             step={0.01}
+//             value={explodeProgress}
+//             onChange={(e) => setExplodeProgress(Number(e.target.value))}
+//           />
+//           <button onClick={() => setIsExploded((p) => !p)}>분해</button>
+//         </div>
 
-  return (
-    <ExplodeContext.Provider value={{ isExploded }}>
-      <PartClickContext.Provider
-        value={{
-          onPartClick,
-          selectedPart,
-          selectedPartPosition,
-          resetView,
-          resetCameraRequest,
-          setResetCameraRequest,
-        }}>
-        <button onClick={() => setIsExploded((p) => !p)}>분해</button>
-        <button onClick={resetView}>원래대로</button>
+//         <Canvas
+//           gl={{ antialias: true }}
+//           camera={{ position: [-11, 10, 10], fov: 3, near: 0.1, far: 1000 }}
+//           style={{ width: "100vw", height: "100vh" }}>
+//           <ambientLight intensity={0.8} />
+//           <Environment preset="sunset" intensity={0.5} />
 
-        <div
-          style={{
-            position: "absolute",
-            top: "40%",
-            left: "30%",
-            zIndex: 1000,
-          }}>
-          <p>{selectedPart}</p>
-          <p>
-            크랭크샤프트(crankshaft)는 엔진 안에서 회전을 만들어내는 중심
-            축이다.
-            <br /> 피스톤이 위아래로 움직이며 생긴 힘을 회전 운동으로 바꿔주는
-            역할을 한다. <br />이 회전이 미션과 바퀴로 전달돼 차량이 움직인다.
-            <br />
-            V4 엔진에서는 네 개 실린더의 힘을 균형 있게 모아 부드럽게 회전시키는
-            게 특히 중요하다.
-          </p>
-        </div>
-        <Canvas
-          gl={{ antialias: true }}
-          camera={{ position: [-10, 10, 10], fov: 3, near: 0.1, far: 1000 }}
-          style={{ width: "100%", height: "100%" }}>
-          <ambientLight intensity={0.8} />
-          <Environment preset="sunset" intensity={0.5} />
+//           {/* 🔥 엔진 전체 */}
+//           <group ref={engineRef}>
+//             <AnimatedGroup
+//               basePosition={[0, -0.08, 0]}
+//               explodeOffset={[0, -0.12, 0]}>
+//               <Model
+//                 url={U.CRANKSHAFT}
+//                 position={[0, 0, 0]}
+//                 partName="crankshaft"
+//                 color={selectedPart === "crankshaft" ? selectedColor : color}
+//               />
+//             </AnimatedGroup>
 
-          <group position={[-0.5, 0, 0]}>
-            <AnimatedGroup
-              basePosition={[0, -0.08, 0]}
-              explodeOffset={[0, -0.12, 0]}>
-              <Model
-                url={U.CRANKSHAFT}
-                position={[0, 0, 0]}
-                partName="crankshaft"
-                color={color}
-              />
-            </AnimatedGroup>
-          </group>
+//             {[0, 1, 2, 3].map((i) => (
+//               <CylinderAssembly
+//                 key={i}
+//                 index={i}
+//                 explodeProgress={explodeProgress}
+//               />
+//             ))}
+//           </group>
 
-          {CYLINDER_ASSEMBLIES.map((c, i) => (
-            <CylinderAssembly
-              key={i}
-              basePosition={c.base}
-              explodeOffset={c.offset}
-              index={i}
-            />
-          ))}
-
-          <ContactShadows opacity={0.4} scale={5} blur={1.2} />
-          <OrbitControls ref={controlsRef} />
-          <CameraZoom controlsRef={controlsRef} />
-        </Canvas>
-      </PartClickContext.Provider>
-    </ExplodeContext.Provider>
-  );
-}
+//           <OrbitControls ref={controlsRef} />
+//           <CameraZoom controlsRef={controlsRef} />
+//         </Canvas>
+//       </PartClickContext.Provider>
+//     </ExplodeContext.Provider>
+//   );
+// }
