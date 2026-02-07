@@ -1,0 +1,221 @@
+.mainContainer {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-inline: 40px;
+  padding-bottom: 40px;
+  background-color: #18191a;
+}
+
+.content {
+  display: flex;
+  position: absolute;
+  top: 15px;
+  height: 70px;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.img {
+  width: 48px;
+  height: 48px;
+  color: #cecfd2;
+}
+
+.title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.description {
+  color: #cecfd2;
+  white-space: nowrap;
+}
+
+.option {
+  display: flex;
+  height: 70px;
+  margin-left: 10%;
+  border: 1px solid #303134;
+  border-radius: 1000px;
+  padding: 8px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 177px;
+  height: 54px;
+  color: #ffffff;
+  cursor: pointer;
+  background-color: blue;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 1000px;
+}
+
+.noneItem {
+  width: 177px;
+  padding-block: 15px;
+  color: #cecfd2;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1000px;
+}
+
+.sceneContainer {
+  flex: 1;
+  margin-bottom: 40px;
+  margin-top: 100px;
+  display: flex;
+  position: relative;
+  width: 71.15%;
+  height: calc(100% - 140px);
+  background-color: #242528;
+  border-radius: 32px;
+}
+
+.rangeBar {
+  position: absolute;
+}
+
+.disassembleContainer {
+  position: absolute;
+  right: 1%;
+  width: 454px;
+  height: calc(100% - 40px);
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #303134;
+  border-radius: 32px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.sideTitle {
+  padding-inline: 20px;
+  padding-top: 32px;
+  flex-shrink: 0;
+  display: flex;
+}
+
+.disassembleTitle {
+  display: flex;
+  width: 100%;
+  border: 1px solid red;
+  align-items: center;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
+  cursor: pointer;
+  padding-right: 8px;
+
+  gap: 8px;
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.icon {
+  margin-left: 8px;
+}
+
+.disassembleImage {
+  display: grid;
+  margin-top: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 1fr;
+  gap: 4px;
+  margin-bottom: 40px;
+}
+
+.descriptionTitle {
+  width: 100px;
+  height: 100px;
+
+  background-color: white;
+}
+
+.topDescriptionInfoBox {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 중요 */
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.disassembleImage {
+  padding-inline: 20px;
+}
+
+.disassembleDescription {
+  padding-inline: 20px;
+  padding-bottom: 20px;
+  gap: 24px;
+
+  display: flex;
+  flex-direction: column;
+
+  flex: 1; /* 남은 영역 채우기 */
+  min-height: 0; /* ⭐⭐⭐ 이거 없으면 스크롤 안 됨 */
+  overflow-y: auto; /* ✅ 여기서만 스크롤 */
+}
+
+.descriptionInfoBox {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 중요 */
+  gap: 4px;
+  margin-top: 24px;
+}
+
+.descriptionInfo {
+  color: #fff;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+  letter-spacing: -0.5px;
+}
+
+.descriptionInfoText {
+  color: #cecfd2;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  letter-spacing: -0.4px;
+}
+
+.disassembleDescription::-webkit-scrollbar {
+  width: 6px;
+}
+
+.disassembleDescription::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.disassembleDescription::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+}
+
+.disassembleDescription::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.45);
+}

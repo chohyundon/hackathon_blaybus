@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import * as THREE from "three";
 import { useGLTF, Html } from "@react-three/drei";
 import RenderItem from "./Render/render";
@@ -8,7 +8,7 @@ function cloneWithMetalMaterial(
   scene,
   metalness = 0.9,
   roughness = 0.12,
-  color
+  color,
 ) {
   const cloned = scene.clone(true);
   cloned.traverse((child) => {
@@ -60,10 +60,25 @@ const URLS = {
   piston: pistonUrl,
 };
 
-const METALNESS = 0.9;
+const METALNESS = 0.5;
 const ROUGHNESS = 0.12;
 
-export default function V4Screen() {
+// 분해 시 부품별 이동 방향 [x, y, z] — 슬라이더 1일 때 이만큼 이동
+const DISASSEMBLE_OFFSETS = {
+  crankshaft: [0, 0, 0],
+  rod: [0, 0.12, 0],
+  cap: [0, -0.06, 0],
+  bolt: [0, -0.07, 0],
+  pin: [0, 0.15, 0],
+  piston: [0, 0.21, 0],
+  ring: [0, 0.12, 0],
+};
+
+export default function V4Screen({
+  selectedPart,
+  setSelectedPart,
+  disassemble = 0,
+}) {
   const crankshaft = useGLTF(URLS.crankshaft);
   const rod = useGLTF(URLS.rod);
   const rodCap = useGLTF(URLS.rodCap);
@@ -72,84 +87,66 @@ export default function V4Screen() {
   const piston = useGLTF(URLS.piston);
   const ring = useGLTF(URLS.ring);
 
-  const [selectedPart, setSelectedPart] = useState(null);
-
   const crankshaftMetal = useMemo(
-    () => cloneWithMetalMaterial(crankshaft.scene, METALNESS, ROUGHNESS),
-    [crankshaft.scene]
+    () =>
+      cloneWithMetalMaterial(crankshaft.scene, METALNESS, ROUGHNESS, "#ffffff"),
+    [crankshaft.scene],
   );
   const rodClones = useMemo(
     () =>
       CYLINDER_ROD_POSITIONS.map(() =>
-        cloneWithMetalMaterial(rod.scene, METALNESS, ROUGHNESS, "#ffffff")
+        cloneWithMetalMaterial(rod.scene, METALNESS, ROUGHNESS, "#ffffff"),
       ),
-    [rod.scene]
+    [rod.scene],
   );
   const rodCapClones = useMemo(
     () =>
       CYLINDER_ROD_CAP_POSITIONS.map(() =>
-        cloneWithMetalMaterial(rodCap.scene, METALNESS, ROUGHNESS)
+        cloneWithMetalMaterial(rodCap.scene, METALNESS, ROUGHNESS, "#ffffff"),
       ),
-    [rodCap.scene]
+    [rodCap.scene],
   );
   const boltClones = useMemo(
     () =>
       BOLT_OFFSETS_PER_CAP.map(() =>
-        cloneWithMetalMaterial(bolt.scene, METALNESS, ROUGHNESS)
+        cloneWithMetalMaterial(bolt.scene, METALNESS, ROUGHNESS, "#ffffff"),
       ),
-    [bolt.scene]
+    [bolt.scene],
   );
   const pinClones = useMemo(
     () =>
       CYLINDER_PIN_POSITIONS.map(() =>
-        cloneWithMetalMaterial(pin.scene, METALNESS, ROUGHNESS)
+        cloneWithMetalMaterial(pin.scene, METALNESS, ROUGHNESS, "#ffffff"),
       ),
-    [pin.scene]
+    [pin.scene],
   );
   const pistonClones = useMemo(
     () =>
       CYLINDER_PISTON_POSITIONS.map(() =>
-        cloneWithMetalMaterial(piston.scene, METALNESS, ROUGHNESS)
+        cloneWithMetalMaterial(piston.scene, METALNESS, ROUGHNESS, "#ffffff"),
       ),
-    [piston.scene]
+    [piston.scene],
   );
   const ringClones = useMemo(
     () =>
       CYLINDER_PISTON_RING_POSITIONS.map(() =>
-        cloneWithMetalMaterial(ring.scene, METALNESS, ROUGHNESS, "#000000")
+        cloneWithMetalMaterial(ring.scene, METALNESS, ROUGHNESS, "#ffffff"),
       ),
-    [ring.scene]
+    [ring.scene],
   );
-
-  const tryPistonZoom = () => {
-    const pos = CYLINDER_PISTON_POSITIONS[0];
-    setSelectedPart({
-      id: "piston-0",
-      worldPos: new THREE.Vector3(pos[0], pos[1], pos[2]),
-    });
-  };
 
   return (
     <group>
-      <Html position={[0.3, 0.25, 0]} center style={{ pointerEvents: "auto" }}>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            tryPistonZoom();
-          }}
-          style={{
-            padding: "8px 12px",
-            fontSize: 12,
-            cursor: "pointer",
-            border: "1px solid #333",
-            borderRadius: 6,
-            background: "#fff",
-          }}>
-          피스톤 확대 테스트
-        </button>
-      </Html>
-      <primitive object={crankshaftMetal} position={[-0.3, 0, 0]} />
+      <RenderItem
+        object={crankshaftMetal}
+        basePosition={[-0.3, 0, 0]}
+        rotation={[0, 0, 0]}
+        id="crankshaft"
+        selectedPart={selectedPart}
+        setSelectedPart={setSelectedPart}
+        disassemble={disassemble}
+        disassembleOffset={DISASSEMBLE_OFFSETS.crankshaft}
+      />
       {CYLINDER_ROD_POSITIONS.map((position, index) => (
         <RenderItem
           key={index}
@@ -159,6 +156,8 @@ export default function V4Screen() {
           id={`rod-${index}`}
           selectedPart={selectedPart}
           setSelectedPart={setSelectedPart}
+          disassemble={disassemble}
+          disassembleOffset={DISASSEMBLE_OFFSETS.rod}
         />
       ))}
       {CYLINDER_ROD_CAP_POSITIONS.map((position, index) => (
@@ -170,6 +169,8 @@ export default function V4Screen() {
           rotation={CYLINDER_ROD_CAP_ROTATION[index]}
           selectedPart={selectedPart}
           setSelectedPart={setSelectedPart}
+          disassemble={disassemble}
+          disassembleOffset={DISASSEMBLE_OFFSETS.cap}
         />
       ))}
       {BOLT_OFFSETS_PER_CAP.map((position, index) => (
@@ -181,6 +182,8 @@ export default function V4Screen() {
           rotation={CYLINDER_BOLT_ROTATION[index]}
           selectedPart={selectedPart}
           setSelectedPart={setSelectedPart}
+          disassemble={disassemble}
+          disassembleOffset={DISASSEMBLE_OFFSETS.bolt}
         />
       ))}
       {CYLINDER_PIN_POSITIONS.map((position, index) => (
@@ -192,6 +195,8 @@ export default function V4Screen() {
           rotation={CYLINDER_PIN_ROTATION[index]}
           selectedPart={selectedPart}
           setSelectedPart={setSelectedPart}
+          disassemble={disassemble}
+          disassembleOffset={DISASSEMBLE_OFFSETS.pin}
         />
       ))}
       {CYLINDER_PISTON_POSITIONS.map((position, index) => (
@@ -203,6 +208,8 @@ export default function V4Screen() {
           rotation={CYLINDER_PISTON_ROTATION[index]}
           selectedPart={selectedPart}
           setSelectedPart={setSelectedPart}
+          disassemble={disassemble}
+          disassembleOffset={DISASSEMBLE_OFFSETS.piston}
         />
       ))}
       {CYLINDER_PISTON_RING_POSITIONS.map((position, index) => (
@@ -214,6 +221,8 @@ export default function V4Screen() {
           rotation={CYLINDER_PISTON_RING_ROTATION[index]}
           selectedPart={selectedPart}
           setSelectedPart={setSelectedPart}
+          disassemble={disassemble}
+          disassembleOffset={DISASSEMBLE_OFFSETS.ring}
         />
       ))}
     </group>

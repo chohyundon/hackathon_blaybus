@@ -78,6 +78,13 @@ export const CYLINDER_PIN_POSITIONS = [
   [0.239, 0.15, -0.03],
 ];
 
+export const CYLINDER_PIN_FOCUS_POSITIONS = [
+  [0.103, 0, 0],
+  [0.112, 0, 0],
+  [0.212, 0, 0],
+  [0.312, 0, 0],
+];
+
 export const CYLINDER_PIN_ROTATION = [
   [0, Math.PI / 2, -0.15],
   [0.2, Math.PI / 2, -0.01],
