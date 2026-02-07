@@ -127,11 +127,21 @@ export default function Scene() {
       <div className={styles.controlsContainer}>
         <aside className={styles.ai}>
           <p className={styles.aiTitle}>AI 어시스턴트</p>
-          {aiValue.trim() !== "" && sendAi ? (
-            <p className={styles.userSend}>{sendAi && aiValue}</p>
-          ) : (
-            <></>
-          )}
+          <div className={styles.aiInputText}>
+            {/* 유저 메시지 */}
+            {sendAi && aiValue.trim() !== "" && (
+              <div className={`${styles.message} ${styles.userSend}`}>
+                {aiValue}
+              </div>
+            )}
+
+            {/* AI 메시지 */}
+            <div className={`${styles.message} ${styles.aiText}`}>
+              ~~대한민국의 경제질서는 개인과 기업의 경제상의 자유와 창의를
+              존중함을 기본으로 한다. 모든 국민은 헌법과 법률이 정한 법관에
+              의하여 법률에 의한 재판을 받을 권리를 가진다.
+            </div>
+          </div>
           <div className={styles.inputContainer}>
             <input
               id="input"
@@ -144,7 +154,7 @@ export default function Scene() {
               src={icon_arrow}
               width={24}
               height={24}
-              className={styles.icon}
+              className={styles.arrowIcon}
               onClick={() => setSendAi(true)}
             />
           </div>
@@ -152,13 +162,18 @@ export default function Scene() {
         <aside className={styles.memoContainer}>
           <div className={styles.memoHeader}>
             <p
-              className={active === "memo" ? styles.noneTitle : styles.Title}
+              className={`${styles.tab} ${
+                active === "memo" ? styles.tabActive : styles.tabInactive
+              }`}
               onClick={() => setActive("memo")}
             >
               메모장
             </p>
+
             <p
-              className={active === "all" ? styles.noneTitle : styles.Title}
+              className={`${styles.tab} ${
+                active === "all" ? styles.tabActive : styles.tabInactive
+              }`}
               onClick={() => setActive("all")}
             >
               전체메모
@@ -181,33 +196,42 @@ export default function Scene() {
               </div>
             ) : (
               <div className={styles.scrollX}>
-                <div className={styles.memoWrapper}>
-                  <p className={styles.memoSecondTitle}>V4_Engine</p>
-                  <p className={styles.memoContent}>
-                    메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
-                  </p>
-                  <p className={styles.day}>2026.02.05</p>
-                </div>
-                <div className={styles.memoWrapper}>
-                  <p className={styles.memoSecondTitle}>V4_Engine</p>
-                  <p className={styles.memoContent}>
-                    메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
-                  </p>
-                  <p className={styles.day}>2026.02.05</p>
-                </div>
-                <div className={styles.memoWrapper}>
-                  <p className={styles.memoSecondTitle}>V4_Engine</p>
-                  <p className={styles.memoContent}>
-                    메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
-                  </p>
-                  <p className={styles.day}>2026.02.05</p>
-                </div>
-                <div className={styles.memoWrapper}>
-                  <p className={styles.memoSecondTitle}>V4_Engine</p>
-                  <p className={styles.memoContent}>
-                    메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
-                  </p>
-                  <p className={styles.day}>2026.02.05</p>
+                <div className={styles.memoBox}>
+                  <div className={styles.memoWrapper}>
+                    <p className={styles.memoSecondTitle}>V4_Engine</p>
+                    <p className={styles.memoContent}>
+                      메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
+                    </p>
+                    <p className={styles.day}>2026.02.05</p>
+                  </div>
+                  <div className={styles.memoWrapper}>
+                    <p className={styles.memoSecondTitle}>V4_Engine</p>
+                    <p className={styles.memoContent}>
+                      메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
+                    </p>
+                    <p className={styles.day}>2026.02.05</p>
+                  </div>
+                  <div className={styles.memoWrapper}>
+                    <p className={styles.memoSecondTitle}>V4_Engine</p>
+                    <p className={styles.memoContent}>
+                      메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
+                    </p>
+                    <p className={styles.day}>2026.02.05</p>
+                  </div>
+                  <div className={styles.memoWrapper}>
+                    <p className={styles.memoSecondTitle}>V4_Engine</p>
+                    <p className={styles.memoContent}>
+                      메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
+                    </p>
+                    <p className={styles.day}>2026.02.05</p>
+                  </div>
+                  <div className={styles.memoWrapper}>
+                    <p className={styles.memoSecondTitle}>V4_Engine</p>
+                    <p className={styles.memoContent}>
+                      메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
+                    </p>
+                    <p className={styles.day}>2026.02.05</p>
+                  </div>
                 </div>
               </div>
             )}
