@@ -1,13 +1,34 @@
-import { Suspense, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, OrbitControls } from "@react-three/drei";
-import V4Screen from "../v4";
+import V4Screen from "../object/v4";
+import RobotArms from "../object/robotArm";
+import Drone from "../object/drone";
 import CameraFocus from "../camera/camera";
 import styles from "./scene.module.css";
 import { object } from "../../../consts/object";
 import closeIcon from "../../../assets/closeIcon.svg";
 import icon_arrow from "../../../assets/icon_arrow-up.svg";
 import dropdown from "../../../assets/dropdown.png";
+
+/** 탭 전환 시 카메라 위치·FOV 갱신 (Canvas의 camera prop은 최초 1회만 적용됨) */
+function CameraByObject({ selectedObject }) {
+  const { camera } = useThree();
+  useEffect(() => {
+    if (selectedObject === "Robot Arm") {
+      camera.position.set(-11, 10, 10);
+      camera.fov = 3.7;
+    } else if (selectedObject === "Drone") {
+      camera.position.set(5, 5, 7);
+      camera.fov = 2.5;
+    } else {
+      camera.position.set(-11, 10, 10);
+      camera.fov = 3;
+    }
+    camera.updateProjectionMatrix();
+  }, [selectedObject, camera]);
+  return null;
+}
 
 export default function Scene() {
   const [selectedPart, setSelectedPart] = useState(null);
@@ -18,9 +39,18 @@ export default function Scene() {
   const [aiValue, setAiValue] = useState("");
   const [sendAi, setSendAi] = useState(false);
   const [show, setShow] = useState(false);
+  const [selected, setSelected] = useState("수동조절");
+  const rangeRef = useRef(null);
+  const controlsRef = useRef();
 
-  const baseName = selectedPart?.id?.split("-")[0];
-  const mockId = baseName === "cap" ? "rodCap" : baseName;
+  useEffect(() => {
+    if (!rangeRef.current) return;
+
+    rangeRef.current.style.setProperty(
+      "--range-progress",
+      `${disassemble * 100}%`
+    );
+  }, [disassemble]);
 
   const handleChangeValue = (e) => {
     setTextValue(e.target.value);
@@ -29,11 +59,6 @@ export default function Scene() {
   const handleAiValue = (e) => {
     setAiValue(e.target.value);
   };
-
-  console.log(mockId);
-  console.log(textValue);
-  console.log(aiValue.trim() !== "");
-  console.log(sendAi);
 
   const handleModal = () => {
     setShow((prev) => !prev);
@@ -53,8 +78,7 @@ export default function Scene() {
                 className={
                   selectedObject === item ? styles.item : styles.noneItem
                 }
-                onClick={() => setSelectedObject(item)}
-              >
+                onClick={() => setSelectedObject(item)}>
                 {item}
               </p>
             ))}
@@ -62,44 +86,117 @@ export default function Scene() {
         </div>
       </nav>
       <div className={styles.sceneContainer}>
-        <input
-          type="range"
-          min={0}
-          max={1}
-          step={0.01}
-          value={disassemble}
-          className={styles.rangeBar}
-          onChange={(e) => setDisassemble(Number(e.target.value))}
-        />
+        <div className={styles.bottomButtonContainer}>
+          <div className={styles.percentContainer}>
+            <p className={styles.percent}>0%</p>
+            <p className={styles.percent}>100%</p>
+          </div>
+          <input
+            ref={rangeRef}
+            type="range"
+            min={0}
+            max={1}
+            step={0.01}
+            value={disassemble}
+            className={styles.rangeBar}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+
+              // 🔥 진행률을 CSS 변수로 전달
+              e.currentTarget.style.setProperty(
+                "--range-progress",
+                `${value * 100}%`
+              );
+
+              setDisassemble(value);
+            }}
+          />
+          <div className={styles.buttonContent}>
+            <button
+              className={
+                selected === "수동조절"
+                  ? styles.bottomActive
+                  : styles.bottomButton
+              }
+              onClick={() => {
+                setSelected("수동조절");
+              }}>
+              수동조절
+            </button>
+
+            <button
+              className={
+                selected === "완전분해"
+                  ? styles.bottomActive
+                  : styles.bottomButton
+              }
+              onClick={() => {
+                setSelected("완전분해");
+                setDisassemble(1);
+              }}>
+              완전분해
+            </button>
+
+            <button
+              className={
+                selected === "완전결합"
+                  ? styles.bottomActive
+                  : styles.bottomButton
+              }
+              onClick={() => {
+                setSelected("완전결합");
+                setDisassemble(0);
+              }}>
+              완전결합
+            </button>
+          </div>
+        </div>
         <Canvas
-          camera={{ position: [-11, 10, 10], fov: 2.2, near: 1, far: 1000 }}
+          camera={{ position: [-11, 10, 10], fov: 3, near: 1, far: 1000 }}
           gl={{ antialias: true }}
+          shadows
+          style={{ transform: "translate(-25%, 5%)" }}
           onPointerMissed={() => setSelectedPart(null)}
-          style={{
-            width: "679px",
-            height: "679px",
-            border: "1px solid red",
-            marginTop: "40px",
-            marginInline: "40px",
-          }}
-        >
-          <directionalLight intensity={0.5} position={[10, 10, 10]} />
-          <ambientLight intensity={0.7} />
-          <OrbitControls makeDefault />
+          className={styles.canvas}>
+          <CameraByObject selectedObject={selectedObject} />
+          <directionalLight
+            intensity={1.4}
+            position={[10, 10, 10]}
+            castShadow
+          />
+          <ambientLight intensity={1.2} />
+          <directionalLight position={[-5, 8, 5]} intensity={0.5} />
+          <directionalLight position={[0, 12, 0]} intensity={0.4} />
           <Environment preset="sunset" />
+          <OrbitControls makeDefault ref={controlsRef} />
           <CameraFocus
             target={
               selectedPart?.intent === "FOCUS_CAMERA" && selectedPart?.worldPos
                 ? selectedPart.worldPos
                 : null
             }
+            controlsRef={controlsRef}
           />
           <Suspense fallback={null}>
-            <V4Screen
-              selectedPart={selectedPart}
-              setSelectedPart={setSelectedPart}
-              disassemble={disassemble}
-            />
+            {selectedObject === "Robot Arm" ? (
+              <RobotArms
+                selectedPart={selectedPart}
+                setSelectedPart={setSelectedPart}
+                disassemble={disassemble}
+              />
+            ) : selectedObject === "Drone" ? (
+              <Drone
+                selectedPart={selectedPart}
+                setSelectedPart={setSelectedPart}
+                disassemble={disassemble}
+              />
+            ) : (
+              <V4Screen
+                selectedPart={selectedPart}
+                setSelectedPart={setSelectedPart}
+                disassemble={disassemble}
+              />
+            )}
           </Suspense>
         </Canvas>
         <div className={styles.disassembleContainer}>
@@ -165,8 +262,7 @@ export default function Scene() {
               className={`${styles.tab} ${
                 active === "memo" ? styles.tabActive : styles.tabInactive
               }`}
-              onClick={() => setActive("memo")}
-            >
+              onClick={() => setActive("memo")}>
               메모장
             </p>
 
@@ -174,8 +270,7 @@ export default function Scene() {
               className={`${styles.tab} ${
                 active === "all" ? styles.tabActive : styles.tabInactive
               }`}
-              onClick={() => setActive("all")}
-            >
+              onClick={() => setActive("all")}>
               전체메모
             </p>
           </div>
@@ -197,34 +292,6 @@ export default function Scene() {
             ) : (
               <div className={styles.scrollX}>
                 <div className={styles.memoBox}>
-                  <div className={styles.memoWrapper}>
-                    <p className={styles.memoSecondTitle}>V4_Engine</p>
-                    <p className={styles.memoContent}>
-                      메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
-                    </p>
-                    <p className={styles.day}>2026.02.05</p>
-                  </div>
-                  <div className={styles.memoWrapper}>
-                    <p className={styles.memoSecondTitle}>V4_Engine</p>
-                    <p className={styles.memoContent}>
-                      메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
-                    </p>
-                    <p className={styles.day}>2026.02.05</p>
-                  </div>
-                  <div className={styles.memoWrapper}>
-                    <p className={styles.memoSecondTitle}>V4_Engine</p>
-                    <p className={styles.memoContent}>
-                      메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
-                    </p>
-                    <p className={styles.day}>2026.02.05</p>
-                  </div>
-                  <div className={styles.memoWrapper}>
-                    <p className={styles.memoSecondTitle}>V4_Engine</p>
-                    <p className={styles.memoContent}>
-                      메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
-                    </p>
-                    <p className={styles.day}>2026.02.05</p>
-                  </div>
                   <div className={styles.memoWrapper}>
                     <p className={styles.memoSecondTitle}>V4_Engine</p>
                     <p className={styles.memoContent}>

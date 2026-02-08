@@ -1,24 +1,24 @@
 import { useMemo } from "react";
 import * as THREE from "three";
-import { useGLTF, Html } from "@react-three/drei";
-import RenderItem from "./Render/render";
+import { useGLTF } from "@react-three/drei";
+import RenderItem from "../Render/render";
 
 /** clone한 scene의 모든 mesh에 메탈 재질 적용. primitive는 material prop을 안 먹으므로 꼭 필요 */
 function cloneWithMetalMaterial(
   scene,
-  metalness = 0.9,
-  roughness = 0.12,
+  metalness = 0.8,
+  roughness = 0.1,
   color,
 ) {
   const cloned = scene.clone(true);
   cloned.traverse((child) => {
     if (child.isMesh && child.material) {
-      const baseColor = color ?? child.material.color?.clone?.() ?? 0x888888;
+      const baseColor = color ?? child.material.color?.clone?.();
       child.material = new THREE.MeshStandardMaterial({
         color: baseColor,
         metalness,
         roughness,
-        envMapIntensity: 1.2,
+        envMapIntensity: 1.5,
       });
       child.castShadow = true;
       child.receiveShadow = true;
@@ -28,13 +28,13 @@ function cloneWithMetalMaterial(
 }
 
 /* GLB는 ?url 로 경로만 가져오고, useGLTF(url) 로 로드 */
-import crankshaftUrl from "../../assets/3DAsset/V4_Engine/Crankshaft.glb?url";
-import connectingRodUrl from "../../assets/3DAsset/V4_Engine/Connecting Rod.glb?url";
-import connectingRodCapUrl from "../../assets/3DAsset/V4_Engine/Connecting Rod Cap.glb?url";
-import conrodBoltUrl from "../../assets/3DAsset/V4_Engine/Conrod Bolt.glb?url";
-import pistonPinUrl from "../../assets/3DAsset/V4_Engine/Piston Pin.glb?url";
-import pistonRingUrl from "../../assets/3DAsset/V4_Engine/Piston Ring.glb?url";
-import pistonUrl from "../../assets/3DAsset/V4_Engine/Piston.glb?url";
+import crankshaftUrl from "../../../assets/3DAsset/V4_Engine/Crankshaft.glb?url";
+import connectingRodUrl from "../../../assets/3DAsset/V4_Engine/Connecting Rod.glb?url";
+import connectingRodCapUrl from "../../../assets/3DAsset/V4_Engine/Connecting Rod Cap.glb?url";
+import conrodBoltUrl from "../../../assets/3DAsset/V4_Engine/Conrod Bolt.glb?url";
+import pistonPinUrl from "../../../assets/3DAsset/V4_Engine/Piston Pin.glb?url";
+import pistonRingUrl from "../../../assets/3DAsset/V4_Engine/Piston Ring.glb?url";
+import pistonUrl from "../../../assets/3DAsset/V4_Engine/Piston.glb?url";
 import {
   BOLT_OFFSETS_PER_CAP,
   CYLINDER_ROD_CAP_POSITIONS,
@@ -48,7 +48,7 @@ import {
   CYLINDER_PISTON_ROTATION,
   CYLINDER_PISTON_RING_ROTATION,
   CYLINDER_PISTON_RING_POSITIONS,
-} from "../../consts/v4";
+} from "../../../consts/v4";
 
 const URLS = {
   crankshaft: crankshaftUrl,
@@ -60,8 +60,8 @@ const URLS = {
   piston: pistonUrl,
 };
 
-const METALNESS = 0.5;
-const ROUGHNESS = 0.12;
+const METALNESS = 0.75;
+const ROUGHNESS = 0.18;
 
 // 분해 시 부품별 이동 방향 [x, y, z] — 슬라이더 1일 때 이만큼 이동
 const DISASSEMBLE_OFFSETS = {
@@ -87,50 +87,74 @@ export default function V4Screen({
   const piston = useGLTF(URLS.piston);
   const ring = useGLTF(URLS.ring);
 
+  const STEEL_COLOR = "#8E9194"; // 약간 푸른 회색
+  const FORGED_STEEL = "#525252";
+  const PISTON_RING_COLOR = "#3F4246"; // 다크 건메탈
+
   const crankshaftMetal = useMemo(
     () =>
-      cloneWithMetalMaterial(crankshaft.scene, METALNESS, ROUGHNESS, "#ffffff"),
+      cloneWithMetalMaterial(
+        crankshaft.scene,
+        METALNESS,
+        ROUGHNESS,
+        STEEL_COLOR,
+      ),
     [crankshaft.scene],
   );
   const rodClones = useMemo(
     () =>
       CYLINDER_ROD_POSITIONS.map(() =>
-        cloneWithMetalMaterial(rod.scene, METALNESS, ROUGHNESS, "#ffffff"),
+        cloneWithMetalMaterial(rod.scene, METALNESS, ROUGHNESS, FORGED_STEEL),
       ),
     [rod.scene],
   );
   const rodCapClones = useMemo(
     () =>
       CYLINDER_ROD_CAP_POSITIONS.map(() =>
-        cloneWithMetalMaterial(rodCap.scene, METALNESS, ROUGHNESS, "#ffffff"),
+        cloneWithMetalMaterial(
+          rodCap.scene,
+          METALNESS,
+          ROUGHNESS,
+          FORGED_STEEL,
+        ),
       ),
     [rodCap.scene],
   );
   const boltClones = useMemo(
     () =>
       BOLT_OFFSETS_PER_CAP.map(() =>
-        cloneWithMetalMaterial(bolt.scene, METALNESS, ROUGHNESS, "#ffffff"),
+        cloneWithMetalMaterial(bolt.scene, METALNESS, ROUGHNESS, FORGED_STEEL),
       ),
     [bolt.scene],
   );
   const pinClones = useMemo(
     () =>
       CYLINDER_PIN_POSITIONS.map(() =>
-        cloneWithMetalMaterial(pin.scene, METALNESS, ROUGHNESS, "#ffffff"),
+        cloneWithMetalMaterial(pin.scene, METALNESS, ROUGHNESS, FORGED_STEEL),
       ),
     [pin.scene],
   );
   const pistonClones = useMemo(
     () =>
       CYLINDER_PISTON_POSITIONS.map(() =>
-        cloneWithMetalMaterial(piston.scene, METALNESS, ROUGHNESS, "#ffffff"),
+        cloneWithMetalMaterial(
+          piston.scene,
+          METALNESS,
+          ROUGHNESS,
+          FORGED_STEEL,
+        ),
       ),
     [piston.scene],
   );
   const ringClones = useMemo(
     () =>
       CYLINDER_PISTON_RING_POSITIONS.map(() =>
-        cloneWithMetalMaterial(ring.scene, METALNESS, ROUGHNESS, "#ffffff"),
+        cloneWithMetalMaterial(
+          ring.scene,
+          0.35, // metalness ↓
+          0.55, // roughness ↑
+          PISTON_RING_COLOR,
+        ),
       ),
     [ring.scene],
   );

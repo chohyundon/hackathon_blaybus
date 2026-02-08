@@ -17,12 +17,31 @@ export default function RenderItem({
   disassembleOffset = [0, 0, 0],
   /** 클릭 시 카메라 포커스용 좌표. 있으면 클릭 지점 대신 이 [x,y,z] 사용 (예: Pin은 basePosition 넣어서 중심에 맞춤) */
   focusPosition,
+  /** 부품 고유 색상. 없으면 GLB 원본 재질 색 그대로 유지 */
+  baseColor,
 }) {
   const ref = useRef();
+  const originalColorsRef = useRef(new Map());
+  const defaultColor = useMemo(
+    () =>
+      baseColor != null
+        ? typeof baseColor === "string" || typeof baseColor === "number"
+          ? new THREE.Color(baseColor)
+          : Array.isArray(baseColor)
+          ? new THREE.Color().setRGB(...baseColor)
+          : baseColor
+        : null,
+    [baseColor]
+  );
 
   const base = useMemo(
-    () => new THREE.Vector3(...basePosition),
-    [basePosition],
+    () =>
+      new THREE.Vector3(
+        ...(Array.isArray(basePosition) && basePosition.length >= 3
+          ? basePosition
+          : [0, 0, 0])
+      ),
+    [basePosition]
   );
   const explodeOffset = useMemo(() => {
     if (id.startsWith("pin")) {
@@ -39,9 +58,9 @@ export default function RenderItem({
       new THREE.Vector3(
         disassembleOffset[0] ?? 0,
         disassembleOffset[1] ?? 0,
-        disassembleOffset[2] ?? 0,
+        disassembleOffset[2] ?? 0
       ),
-    [disassembleOffset],
+    [disassembleOffset]
   );
 
   const handleClick = (e) => {
@@ -86,12 +105,7 @@ export default function RenderItem({
     ref.current.position.lerp(targetPos, 0.07);
 
     // ---------- 색상 ----------
-    let targetColor = BASE_COLOR;
-
-    if (selectedPart?.id === id) {
-      targetColor =
-        selectedPart.intent === "MOVE_OBJECT" ? ACTIVE_COLOR : FOCUS_COLOR;
-    }
+    const isSelected = selectedPart?.id === id;
 
     ref.current.traverse((child) => {
       if (child.isMesh && child.material) {
@@ -100,9 +114,16 @@ export default function RenderItem({
           : [child.material];
 
         materials.forEach((mat) => {
-          if (mat.color) {
-            mat.color.lerp(targetColor, 0.05);
+          if (!mat.color) return;
+          if (!originalColorsRef.current.has(mat)) {
+            originalColorsRef.current.set(mat, mat.color.clone());
           }
+          const targetColor = isSelected
+            ? selectedPart.intent === "MOVE_OBJECT"
+              ? ACTIVE_COLOR
+              : FOCUS_COLOR
+            : defaultColor ?? originalColorsRef.current.get(mat);
+          mat.color.lerp(targetColor, 0.05);
         });
       }
     });
