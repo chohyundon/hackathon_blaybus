@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 const ACTIVE_COLOR = new THREE.Color("#ff6b00"); // 선택·이동 시 강조 (주황)
-const FOCUS_COLOR = new THREE.Color("#66aaff"); // 카메라 줌(포커스) 시 하이라이트 (파랑)
+const FOCUS_COLOR = new THREE.Color("#4da6ff"); // 카메라 줌(포커스) 시 하이라이트 (밝은 파랑)
 
 export default function RenderItem({
   object,
@@ -159,7 +159,8 @@ export default function RenderItem({
           const targetColor = isSelected
             ? highlightColor
             : defaultColor ?? originalColorsRef.current.get(mat);
-          mat.color.lerp(targetColor, 0.08);
+          const lerpSpeed = isSelected ? 0.15 : 0.12;
+          mat.color.lerp(targetColor, lerpSpeed);
         });
       }
     });

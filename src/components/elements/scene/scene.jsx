@@ -7,9 +7,8 @@ import Drone from "../object/drone";
 import CameraFocus from "../camera/camera";
 import styles from "./scene.module.css";
 import { object } from "../../../consts/object";
-import closeIcon from "../../../assets/closeIcon.svg";
 import icon_arrow from "../../../assets/icon_arrow-up.svg";
-import dropdown from "../../../assets/dropdown.png";
+import SideScene from "./sideScene";
 
 /** 탭 전환 시 카메라 위치·FOV 갱신 (Canvas의 camera prop은 최초 1회만 적용됨) */
 function CameraByObject({ selectedObject }) {
@@ -38,7 +37,6 @@ export default function Scene() {
   const [textValue, setTextValue] = useState("");
   const [aiValue, setAiValue] = useState("");
   const [sendAi, setSendAi] = useState(false);
-  const [show, setShow] = useState(false);
   const [selected, setSelected] = useState("수동조절");
   const rangeRef = useRef(null);
   const controlsRef = useRef();
@@ -58,10 +56,6 @@ export default function Scene() {
 
   const handleAiValue = (e) => {
     setAiValue(e.target.value);
-  };
-
-  const handleModal = () => {
-    setShow((prev) => !prev);
   };
 
   return (
@@ -202,27 +196,11 @@ export default function Scene() {
             )}
           </Suspense>
         </Canvas>
-        <div className={styles.disassembleContainer}>
-          <div className={styles.sideTitle}>
-            <p className={styles.disassembleTitle} onClick={handleModal}>
-              제품명 타이틀
-              <img src={dropdown} className={styles.icon} />
-            </p>
-            <img src={closeIcon} width={40} height={40} alt="closeIcon" />
-          </div>
-          {show && <div className={styles.modal}></div>}
-          <div className={styles.disassembleImage}>
-            <span className={styles.descriptionTitle}>제품 설명</span>
-          </div>
-          <div className={styles.disassembleDescription}>
-            <div className={styles.topDescriptionInfoBox}>
-              <span className={styles.descriptionInfo}>부품세부B</span>
-              <span className={styles.descriptionInfoText}>
-                부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명부연설명
-              </span>
-            </div>
-          </div>
-        </div>
+        <SideScene
+          selectedPart={selectedPart}
+          selectedObject={selectedObject}
+          setSelectedPart={setSelectedPart}
+        />
       </div>
       <div className={styles.controlsContainer}>
         <aside className={styles.ai}>
