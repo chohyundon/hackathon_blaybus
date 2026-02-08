@@ -12,6 +12,18 @@ import nutUrl from "../../../assets/3DAsset/Drone/Nut.glb?url";
 import screwUrl from "../../../assets/3DAsset/Drone/Screw.glb?url";
 import xyzUrl from "../../../assets/3DAsset/Drone/xyz.glb?url";
 import RenderItem from "../Render/render";
+import {
+  ARM_GEAR,
+  BEATER_DISC,
+  GEARING,
+  IMPELLAR_BLADE,
+  LEG, // 테스트용 임시 제외
+  MAIN_FRAME,
+  MAIN_FRAME_MIR,
+  NUT,
+  SCREW,
+  XYZ,
+} from "../../mock/drone";
 
 const URLS = {
   armGear: armGearUrl,
@@ -28,70 +40,79 @@ const URLS = {
 
 const DRONE_PART_IDS = [
   "armGear",
+  "armGear2",
+  "armGear3",
+  "armGear4",
   "beaterDisc",
   "gearing",
+  "gearing2",
+  "gearing3",
+  "gearing4",
   "impellarBlade",
+  "impellarBlade2",
+  "impellarBlade3",
+  "impellarBlade4",
   "leg",
   "leg2",
   "leg3",
-  "leg4",
+  "leg4", // 테스트용 임시 제외
   "mainFrame",
   "mainFrameMir",
   "nut",
+  "nut2",
+  "nut3",
+  "nut4",
   "screw",
+  "screw2",
+  "screw3",
+  "screw4",
   "xyz",
+  "xyz2",
+  "xyz3",
+  "xyz4",
 ];
 
-const DEG90 = (Math.PI / 180) * 90;
-const DEG180 = (Math.PI / 180) * 180;
+/** 드론 부품 클릭 시 하이라이트 색 (hex) */
+const DRONE_SELECTED_COLOR = "#ffffff";
+/** 드론 부품 선택 시 전진 오프셋 [x, y, z] */
+const DRONE_SELECTED_OFFSET = [0, 0.1, 0.05];
 
-// 레그 4개: 프레임 중심 기준 앞·뒤·좌·우 (XZ 평면)
+// ——— 합치기 ———
 const DRONE_POSITIONS = [
-  [10, 0, 0], // armGear
-  [10, 0.082, 0], // beaterDisc
-  [20, 0.24, 0.15], // gearing
-  [30, 0.55, -0.126], // impellarBlade
-  [0.05, 0, 0.05], // leg (앞-오른쪽)
-  [-0.12, 0, 0.12], // leg2 (앞-왼쪽)
-  [-0.12, 0, -0.12], // leg3 (뒤-왼쪽)
-  [0.12, 0, -0.12], // leg4 (뒤-오른쪽)
-  [0, 0, -0.1], // mainFrame
-  [0, 0, -0.1], // mainFrameMir
-  [70, 0.6, 0.45], // nut
-  [80, 0.6, 0.45], // screw
-  [90, 0.5, 0], // xyz
+  ...ARM_GEAR.positions,
+  BEATER_DISC.position,
+  ...GEARING.positions,
+  ...IMPELLAR_BLADE.positions,
+  ...LEG.positions,
+  MAIN_FRAME.position,
+  MAIN_FRAME_MIR.position,
+  ...NUT.positions,
+  ...SCREW.positions,
+  ...XYZ.positions,
 ];
-
 const DRONE_ROTATIONS = [
-  [0, 0, 0], // armGear
-  [0, 0, 0], // beaterDisc
-  [0, 0, 0], // gearing
-  [0, 0, 0], // impellarBlade
-  [0, 0, 0], // leg
-  [0, DEG90, 0], // leg2
-  [0, DEG180, 0], // leg3
-  [0, DEG90 * 3, 0], // leg4 (270°)
-  [1.6, DEG180, 0], // mainFrame
-  [1.6, DEG180, 0], // mainFrameMir
-  [0, 0, 0], // nut
-  [0, 0, 0], // screw
-  [0, 0, 0], // xyz
+  ...ARM_GEAR.rotations,
+  BEATER_DISC.rotation,
+  ...GEARING.rotations,
+  ...IMPELLAR_BLADE.rotations,
+  ...LEG.rotations,
+  MAIN_FRAME.rotation,
+  MAIN_FRAME_MIR.rotation,
+  ...NUT.rotations,
+  ...SCREW.rotations,
+  ...XYZ.rotations,
 ];
-
 const DISASSEMBLE_OFFSETS = [
-  [0, 0, 0],
-  [0, 0.08, 0],
-  [0, 0.1, 0.02],
-  [0, 0.1, 0.04],
-  [0, 0.08, 0.06],
-  [0, 0.08, 0.06],
-  [0, 0.08, 0.06],
-  [0, 0.08, 0.06],
-  [0.06, 0.06, 0.08],
-  [0.08, 0.04, 0.1],
-  [0.1, 0.02, 0.12],
-  [0.1, 0.02, 0.12],
-  [0.1, 0.02, 0.12],
+  ...ARM_GEAR.offsets,
+  BEATER_DISC.offset,
+  ...GEARING.offsets,
+  ...IMPELLAR_BLADE.offsets,
+  ...LEG.offsets,
+  MAIN_FRAME.offset,
+  MAIN_FRAME_MIR.offset,
+  ...NUT.offsets,
+  ...SCREW.offsets,
+  ...XYZ.offsets,
 ];
 
 export default function Drone({
@@ -112,21 +133,53 @@ export default function Drone({
 
   const scenes = [
     armGear,
+    armGear,
+    armGear,
+    armGear,
     beaterDisc,
     gearing,
+    gearing,
+    gearing,
+    gearing,
+    impellarBlade,
+    impellarBlade,
+    impellarBlade,
     impellarBlade,
     leg,
     leg,
     leg,
-    leg,
+    leg, // 테스트용 임시 제외
     mainFrame,
     mainFrameMir,
     nut,
+    nut,
+    nut,
+    nut,
     screw,
+    screw,
+    screw,
+    screw,
+    xyz,
+    xyz,
+    xyz,
     xyz,
   ];
   const clones = useMemo(() => {
-    const list = scenes.map((gltf) => gltf.scene.clone());
+    const list = scenes.map((gltf) => {
+      const clone = gltf.scene.clone();
+      // 부품별로 재질 복제 → 선택 시 해당 부품만 색상 변경 (공유 재질 방지)
+      clone.traverse((child) => {
+        if (child.isMesh && child.material) {
+          const mats = Array.isArray(child.material)
+            ? child.material
+            : [child.material];
+          child.material = Array.isArray(child.material)
+            ? mats.map((m) => m.clone())
+            : child.material.clone();
+        }
+      });
+      return clone;
+    });
     return list;
   }, [
     armGear,
@@ -156,6 +209,8 @@ export default function Drone({
           disassembleOffset={DISASSEMBLE_OFFSETS[index]}
           focusPosition={null}
           baseColor={null}
+          focusColor={DRONE_SELECTED_COLOR}
+          selectedOffset={DRONE_SELECTED_OFFSET}
         />
       ))}
     </group>

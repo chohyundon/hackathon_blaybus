@@ -2,7 +2,6 @@ import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-const BASE_COLOR = new THREE.Color("#bbbbbb"); // 기본
 const ACTIVE_COLOR = new THREE.Color("#ff6b00"); // 선택·이동 시 강조 (주황)
 const FOCUS_COLOR = new THREE.Color("#66aaff"); // 카메라 줌(포커스) 시 하이라이트 (파랑)
 
@@ -19,6 +18,11 @@ export default function RenderItem({
   focusPosition,
   /** 부품 고유 색상. 없으면 GLB 원본 재질 색 그대로 유지 */
   baseColor,
+  /** 클릭(선택) 시 하이라이트 색. 없으면 기본 파랑/주황 사용 */
+  focusColor,
+  activeColor,
+  /** 선택 시 부품을 이동시킬 오프셋 [x,y,z]. 있으면 선택 시 이만큼 더해짐 (예: 드론 부품 전진) */
+  selectedOffset,
 }) {
   const ref = useRef();
   const originalColorsRef = useRef(new Map());
@@ -32,6 +36,24 @@ export default function RenderItem({
           : baseColor
         : null,
     [baseColor]
+  );
+  const resolvedFocusColor = useMemo(
+    () =>
+      focusColor != null
+        ? typeof focusColor === "string" || typeof focusColor === "number"
+          ? new THREE.Color(focusColor)
+          : focusColor
+        : FOCUS_COLOR,
+    [focusColor]
+  );
+  const resolvedActiveColor = useMemo(
+    () =>
+      activeColor != null
+        ? typeof activeColor === "string" || typeof activeColor === "number"
+          ? new THREE.Color(activeColor)
+          : activeColor
+        : ACTIVE_COLOR,
+    [activeColor]
   );
 
   const base = useMemo(
@@ -62,6 +84,14 @@ export default function RenderItem({
       ),
     [disassembleOffset]
   );
+  const selectedOffsetVec = useMemo(() => {
+    if (!selectedOffset || !Array.isArray(selectedOffset)) return null;
+    return new THREE.Vector3(
+      selectedOffset[0] ?? 0,
+      selectedOffset[1] ?? 0,
+      selectedOffset[2] ?? 0
+    );
+  }, [selectedOffset]);
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -99,8 +129,12 @@ export default function RenderItem({
     // ---------- 위치: 기본 + 분해 오프셋 + 선택 시 살짝 전진 ----------
     const disassembleDelta = explodeDir.clone().multiplyScalar(disassemble);
     let targetPos = base.clone().add(disassembleDelta);
-    if (selectedPart?.id === id && selectedPart.intent === "MOVE_OBJECT") {
-      targetPos.add(explodeOffset);
+    if (selectedPart?.id === id) {
+      if (selectedPart.intent === "MOVE_OBJECT") {
+        targetPos.add(explodeOffset);
+      } else if (selectedOffsetVec) {
+        targetPos.add(selectedOffsetVec);
+      }
     }
     ref.current.position.lerp(targetPos, 0.07);
 
@@ -118,12 +152,14 @@ export default function RenderItem({
           if (!originalColorsRef.current.has(mat)) {
             originalColorsRef.current.set(mat, mat.color.clone());
           }
+          const highlightColor =
+            selectedPart?.intent === "MOVE_OBJECT"
+              ? resolvedActiveColor
+              : resolvedFocusColor;
           const targetColor = isSelected
-            ? selectedPart.intent === "MOVE_OBJECT"
-              ? ACTIVE_COLOR
-              : FOCUS_COLOR
+            ? highlightColor
             : defaultColor ?? originalColorsRef.current.get(mat);
-          mat.color.lerp(targetColor, 0.05);
+          mat.color.lerp(targetColor, 0.08);
         });
       }
     });

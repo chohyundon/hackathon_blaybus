@@ -16,11 +16,11 @@ function CameraByObject({ selectedObject }) {
   const { camera } = useThree();
   useEffect(() => {
     if (selectedObject === "Robot Arm") {
-      camera.position.set(-11, 10, 10);
+      camera.position.set(-11, 12, 10);
       camera.fov = 3.7;
     } else if (selectedObject === "Drone") {
       camera.position.set(5, 5, 7);
-      camera.fov = 2.5;
+      camera.fov = 3.5;
     } else {
       camera.position.set(-11, 10, 10);
       camera.fov = 3;
@@ -171,11 +171,14 @@ export default function Scene() {
           <OrbitControls makeDefault ref={controlsRef} />
           <CameraFocus
             target={
-              selectedPart?.intent === "FOCUS_CAMERA" && selectedPart?.worldPos
+              selectedPart?.intent === "FOCUS_CAMERA" &&
+              selectedPart?.worldPos &&
+              !selectedPart?.id?.startsWith("robot-")
                 ? selectedPart.worldPos
                 : null
             }
             controlsRef={controlsRef}
+            selectedObject={selectedObject}
           />
           <Suspense fallback={null}>
             {selectedObject === "Robot Arm" ? (

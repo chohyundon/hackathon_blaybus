@@ -8,7 +8,7 @@ function cloneWithMetalMaterial(
   scene,
   metalness = 0.8,
   roughness = 0.1,
-  color,
+  color
 ) {
   const cloned = scene.clone(true);
   cloned.traverse((child) => {
@@ -97,54 +97,44 @@ export default function V4Screen({
         crankshaft.scene,
         METALNESS,
         ROUGHNESS,
-        STEEL_COLOR,
+        STEEL_COLOR
       ),
-    [crankshaft.scene],
+    [crankshaft.scene]
   );
   const rodClones = useMemo(
     () =>
       CYLINDER_ROD_POSITIONS.map(() =>
-        cloneWithMetalMaterial(rod.scene, METALNESS, ROUGHNESS, FORGED_STEEL),
+        cloneWithMetalMaterial(rod.scene, METALNESS, ROUGHNESS, FORGED_STEEL)
       ),
-    [rod.scene],
+    [rod.scene]
   );
   const rodCapClones = useMemo(
     () =>
       CYLINDER_ROD_CAP_POSITIONS.map(() =>
-        cloneWithMetalMaterial(
-          rodCap.scene,
-          METALNESS,
-          ROUGHNESS,
-          FORGED_STEEL,
-        ),
+        cloneWithMetalMaterial(rodCap.scene, METALNESS, ROUGHNESS, FORGED_STEEL)
       ),
-    [rodCap.scene],
+    [rodCap.scene]
   );
   const boltClones = useMemo(
     () =>
       BOLT_OFFSETS_PER_CAP.map(() =>
-        cloneWithMetalMaterial(bolt.scene, METALNESS, ROUGHNESS, FORGED_STEEL),
+        cloneWithMetalMaterial(bolt.scene, METALNESS, ROUGHNESS, FORGED_STEEL)
       ),
-    [bolt.scene],
+    [bolt.scene]
   );
   const pinClones = useMemo(
     () =>
       CYLINDER_PIN_POSITIONS.map(() =>
-        cloneWithMetalMaterial(pin.scene, METALNESS, ROUGHNESS, FORGED_STEEL),
+        cloneWithMetalMaterial(pin.scene, METALNESS, ROUGHNESS, FORGED_STEEL)
       ),
-    [pin.scene],
+    [pin.scene]
   );
   const pistonClones = useMemo(
     () =>
       CYLINDER_PISTON_POSITIONS.map(() =>
-        cloneWithMetalMaterial(
-          piston.scene,
-          METALNESS,
-          ROUGHNESS,
-          FORGED_STEEL,
-        ),
+        cloneWithMetalMaterial(piston.scene, METALNESS, ROUGHNESS, FORGED_STEEL)
       ),
-    [piston.scene],
+    [piston.scene]
   );
   const ringClones = useMemo(
     () =>
@@ -153,10 +143,10 @@ export default function V4Screen({
           ring.scene,
           0.35, // metalness ↓
           0.55, // roughness ↑
-          PISTON_RING_COLOR,
-        ),
+          PISTON_RING_COLOR
+        )
       ),
-    [ring.scene],
+    [ring.scene]
   );
 
   return (
