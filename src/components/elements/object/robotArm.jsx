@@ -27,7 +27,7 @@ const URLS = {
 
 function cloneWithMetalMaterial(
   scene,
-  metalness = 0.7,
+  metalness = 0.9,
   roughness = 0.15,
   color
 ) {
@@ -78,17 +78,21 @@ const ROBOT_ARM_ROTATIONS = [
   [1.7, 0, 3.5],
 ];
 
+// 분해 시 부품별 이동 방향: 위쪽(+Y) 위주로 벌어지며, 살짝 바깥으로 퍼지도록
 const DISASSEMBLE_OFFSETS = [
-  [0, 0, 0],
-  [-0.072, 0.05, 0],
-  [-0.081, 0.2, 0.02],
-  [-0.093, 0.24, 0.04],
-  [-0.14, 0.26, 0.07],
-  [-0.115, 0.28, 0.08],
-  [-0.126, 0.25, 0.09],
-  [-0.137, 0.26, 0.12],
-  [-0.149, 0.27, 0.13],
+  [0, 0, 0], // base 고정
+  [0, 0.06, 0], // part2 위로
+  [0.02, 0.1, 0.03],
+  [0.02, 0.12, 0.02],
+  [0.03, 0.14, 0.05],
+  [0.03, 0.15, 0.03],
+  [0.04, 0.16, 0.04],
+  [0.05, 0.2, 0.05], // part8
+  [-0.05, 0.2, 0.05], // part9 반대쪽
 ];
+
+// 슬라이더 0~1 구간에서 부품별로 분해 시작 시점 (순차 분해)
+const DISASSEMBLE_START = [0, 0, 0.08, 0.16, 0.24, 0.32, 0.4, 0.48, 0.56];
 
 const PART_IDS = [
   "base",
@@ -141,6 +145,7 @@ export default function RobotArms({
           setSelectedPart={setSelectedPart}
           disassemble={disassemble}
           disassembleOffset={DISASSEMBLE_OFFSETS[index]}
+          disassembleStart={DISASSEMBLE_START[index]}
         />
       ))}
     </group>

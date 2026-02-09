@@ -14,6 +14,8 @@ export default function RenderItem({
   setSelectedPart,
   disassemble = 0,
   disassembleOffset = [0, 0, 0],
+  /** 0~1. 이 값보다 disassemble이 커질 때부터 이동 시작 (순차 분해용) */
+  disassembleStart = 0,
   /** 클릭 시 카메라 포커스용 좌표. 있으면 클릭 지점 대신 이 [x,y,z] 사용 (예: Pin은 basePosition 넣어서 중심에 맞춤) */
   focusPosition,
   /** 부품 고유 색상. 없으면 GLB 원본 재질 색 그대로 유지 */
@@ -84,6 +86,13 @@ export default function RenderItem({
       ),
     [disassembleOffset]
   );
+
+  const effectiveDisassemble =
+    disassembleStart >= 1
+      ? 0
+      : disassemble <= disassembleStart
+        ? 0
+        : (disassemble - disassembleStart) / (1 - disassembleStart);
   const selectedOffsetVec = useMemo(() => {
     if (!selectedOffset || !Array.isArray(selectedOffset)) return null;
     return new THREE.Vector3(
@@ -127,7 +136,9 @@ export default function RenderItem({
     if (!ref.current) return;
 
     // ---------- 위치: 기본 + 분해 오프셋 + 선택 시 살짝 전진 ----------
-    const disassembleDelta = explodeDir.clone().multiplyScalar(disassemble);
+    const disassembleDelta = explodeDir
+      .clone()
+      .multiplyScalar(effectiveDisassemble);
     let targetPos = base.clone().add(disassembleDelta);
     if (selectedPart?.id === id) {
       if (selectedPart.intent === "MOVE_OBJECT") {

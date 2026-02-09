@@ -1,11 +1,14 @@
 .scrollX {
   width: 100%;
-  min-width: 0; /* 가로 스크롤 콘텐츠가 부모 넓이 밀어내지 않게 */
+  min-width: 0;
   height: 100%;
   margin-bottom: 20px;
-  padding-bottom: 16px; /* 스크롤바와 메모 카드 사이 여백 */
+  padding-bottom: 16px;
   overflow-x: auto;
+  overflow-y: hidden;
   box-sizing: border-box;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 아이템 래퍼 */
@@ -40,8 +43,16 @@
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 22.5px */
+  line-height: 150%;
   letter-spacing: -0.375px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  height: 65%;
+  min-width: 0;
+  word-break: break-word;
 }
 
 .day {
@@ -55,15 +66,19 @@
 }
 
 .scrollX::-webkit-scrollbar {
-  height: 6px;
+  height: 8px;
 }
 
 .scrollX::-webkit-scrollbar-track {
-  margin-bottom: 20px; /* ⭐ 위 콘텐츠랑 거리 */
-  background: transparent;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
 }
 
 .scrollX::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.35);
   border-radius: 999px;
+}
+
+.scrollX::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
 }

@@ -3,7 +3,6 @@ import styles from "./memo.module.css";
 
 export default function Memo() {
   const memoStore = useMemoStore((state) => state.memos);
-  console.log(memoStore);
 
   return (
     <div className={styles.scrollX}>

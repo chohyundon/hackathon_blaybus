@@ -10,7 +10,7 @@ import springUrl from "../../../assets/3DAsset/Suspension/SPRING.glb?url";
 
 function cloneWithMetalMaterial(
   scene,
-  metalness = 0.7,
+  metalness = 0.8,
   roughness = 0.15,
   color
 ) {
