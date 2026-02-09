@@ -1,10 +1,10 @@
-import crankshaft from "./v4/crankshaft.svg";
-import connectingRod from "./v4/connectingRod.svg";
-import connectingRodCap from "./v4/connectingRodCap.svg";
-import conrodBolt from "./v4/conrodBolt.svg";
-import pistonPin from "./v4/pistonPin.svg";
-import piston from "./v4/piston.svg";
-import pistonRing from "./v4/pistonRing.svg";
+import crankshaft from "./v4/Crankshaft.svg";
+import connectingRod from "./v4/ConnectingRod.svg";
+import connectingRodCap from "./v4/ConnectingRodCap.svg";
+import conrodBolt from "./v4/ConrodBolt.svg";
+import pistonPin from "./v4/PistonPin.svg";
+import piston from "./v4/Piston.svg";
+import pistonRing from "./v4/PistonRing.svg";
 import v4Engine from "./v4/v4Engine.svg";
 
 import droneSvg from "./drone/drone.svg";
@@ -33,7 +33,7 @@ import suspension from "./suspension/suspension.svg";
 import suspensionRod from "./suspension/ConnectingRodCap.svg";
 import suspensionBase from "./suspension/ConrodBolt.svg";
 import suspensionSpring from "./suspension/Crankshaft.svg";
-import SuspensionNut from "./suspension/piston.svg";
+import SuspensionNut from "./suspension/Piston.svg";
 
 export const v4Images = [
   v4Engine,
