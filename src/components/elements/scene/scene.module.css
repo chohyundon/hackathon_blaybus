@@ -9,6 +9,25 @@
   box-sizing: border-box;
 }
 
+.canvasWrapper {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  transform: translate(-25%, 5%);
+}
+
+.zoomInIcon {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  cursor: pointer;
+  z-index: 25;
+  pointer-events: auto;
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
 .canvas {
   width: 100%;
   height: 100%;
@@ -722,4 +741,251 @@
   width: 1px;
   height: 16px;
   padding-inline: 20px;
+}
+
+/* ---------- 반응형 ---------- */
+@media (max-width: 1200px) {
+  .mainContainer {
+    padding-inline: 24px;
+    gap: 16px;
+  }
+
+  .sceneContainer {
+    flex: 1 1 65%;
+    max-width: 65%;
+    margin-top: 80px;
+    margin-bottom: 24px;
+    height: calc(100% - 124px);
+  }
+
+  .controlsContainer {
+    flex: 0 0 35%;
+    width: 35%;
+    max-width: 35%;
+    margin-top: 80px;
+    margin-bottom: 24px;
+    height: calc(100% - 124px);
+  }
+
+  .bottomButtonContainer {
+    bottom: 24px;
+    left: 24px;
+    width: 55%;
+  }
+
+  .canvasWrapper {
+    transform: translate(-20%, 5%);
+  }
+
+  .aiTitle {
+    font-size: 20px;
+  }
+
+  .tabActive {
+    font-size: 18px;
+  }
+
+  .tabInactive {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .mainContainer {
+    flex-direction: column;
+    padding-inline: 16px;
+    gap: 12px;
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .zoomInIcon {
+    top: 16px;
+    left: 16px;
+  }
+
+  .sceneContainer {
+    flex: none;
+    max-width: 100%;
+    width: 100%;
+    margin-top: 72px;
+    margin-bottom: 16px;
+    min-height: 50vh;
+    height: min(55vh, 400px);
+  }
+
+  .controlsContainer {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 0;
+    margin-bottom: 16px;
+    height: auto;
+    min-height: 40vh;
+  }
+
+  .bottomButtonContainer {
+    width: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .rangeBar {
+    width: 100%;
+    order: -1;
+  }
+
+  .percentContainer {
+    width: 100%;
+  }
+
+  .buttonContent {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .canvasWrapper {
+    transform: none;
+  }
+
+  .ai {
+    height: auto;
+    min-height: 200px;
+    padding: 12px 16px;
+  }
+
+  .aiTitle {
+    font-size: 18px;
+  }
+
+  .input {
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .arrowIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .memoContainer {
+    min-height: 220px;
+  }
+
+  .textSection {
+    padding: 16px;
+  }
+
+  .tabActive {
+    font-size: 16px;
+    padding-left: 16px;
+  }
+
+  .tabInactive {
+    font-size: 14px;
+    padding-left: 16px;
+  }
+
+  .textArea {
+    font-size: 14px;
+    min-height: 80px;
+  }
+
+  .memoWrapper {
+    width: 150px;
+  }
+
+  .memoContent {
+    font-size: 14px;
+  }
+
+  .disassembleContainer {
+    width: 100%;
+    max-width: 280px;
+    min-width: 0;
+  }
+
+  .disassembleTitle {
+    font-size: 18px;
+  }
+
+  .descriptionInfo {
+    font-size: 16px;
+  }
+
+  .descriptionInfoText {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .mainContainer {
+    padding-inline: 12px;
+  }
+
+  .zoomInIcon {
+    top: 12px;
+    left: 12px;
+  }
+
+  .sceneContainer {
+    margin-top: 64px;
+    min-height: 45vh;
+    height: min(50vh, 360px);
+    border-radius: 20px;
+  }
+
+  .bottomButtonContainer {
+    width: 95%;
+    bottom: 12px;
+  }
+
+  .bottomActive,
+  .bottomButton {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .buttonContent {
+    gap: 8px;
+    padding: 6px;
+  }
+
+  .percent {
+    font-size: 12px;
+  }
+
+  .aiTitle {
+    font-size: 16px;
+  }
+
+  .tabActive {
+    font-size: 15px;
+  }
+
+  .tabInactive {
+    font-size: 13px;
+  }
+
+  .memoWrapper {
+    width: 140px;
+  }
+
+  .disassembleContainer {
+    max-width: 240px;
+  }
+
+  .disassembleTitle {
+    font-size: 16px;
+  }
+
+  .sideTitle {
+    padding-inline: 12px;
+    padding-top: 20px;
+  }
 }

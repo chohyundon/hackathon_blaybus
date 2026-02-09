@@ -4,7 +4,11 @@ import * as THREE from "three";
 
 const CLOSE_ENOUGH = 0.1;
 
-export default function CameraFocus({ target, controlsRef }) {
+export default function CameraFocus({
+  target,
+  controlsRef,
+  enableFocus = true,
+}) {
   const { camera } = useThree();
 
   const defaultPos = useRef(new THREE.Vector3());
@@ -13,6 +17,8 @@ export default function CameraFocus({ target, controlsRef }) {
   const returnDone = useRef(false);
 
   useFrame(() => {
+    if (!enableFocus) return;
+
     const controls = controlsRef?.current;
     if (!controls) return;
 

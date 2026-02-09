@@ -16,6 +16,7 @@ export const v4 = {
     },
     {
       id: "crankshaft",
+      name: "크랭크축",
       usage:
         "여러 개의 크랭크핀과 저어널을 통해 각 실린더에서 오는 힘을 모아 회전 토크로 바꾸고, 플라이휠·클러치 등으로 전달하는 축.",
       material:
@@ -23,12 +24,14 @@ export const v4 = {
     },
     {
       id: "connectingRod",
+      name: "커넥팅로드",
       usage: "피스톤의 왕복력을 크랭크핀에 전달해 크랭크축을 회전시키는 로드.",
       material:
         "드롭포징한 합금강이나 탄소강을 사용해 높은 인장·피로 강도 확보.",
     },
     {
       id: "connectingRodCap",
+      name: "커넥팅로드 캡",
       usage:
         "커넥팅로드 대단을 분할 구조로 만들어 크랭크핀을 감싸고 베어링을 고정하는 캡.",
       material:
@@ -36,18 +39,21 @@ export const v4 = {
     },
     {
       id: "conrodBolt",
+      name: "커넥팅로드 볼트",
       usage:
         "커넥팅로드와 로드 캡을 강하게 체결해 고속 회전 중에도 크랭크핀 결합을 유지하는 고장력 볼트.",
       material: "고강도 합금강 열처리.",
     },
     {
       id: "pistonPin",
+      name: "피스톤 핀",
       usage:
         "피스톤과 커넥팅로드 소단을 힌지처럼 연결해 피스톤 왕복운동을 로드에 전달하는 원통 핀.",
       material: "고강도 합금강 열처리 및 경질 연마 처리.",
     },
     {
       id: "piston",
+      name: "피스톤",
       usage:
         "실린더 안에서 왕복하면서 연소가스 압력을 받아 커넥팅로드에 힘을 전달하는 부품.",
       material:
@@ -55,6 +61,7 @@ export const v4 = {
     },
     {
       id: "pistonRing",
+      name: "피스톤 링",
       usage:
         "피스톤과 실린더 벽 사이를 밀봉해 압축·연소 가스 누설을 막고, 오일 제어와 열전달을 돕는 얇은 링.",
       material:

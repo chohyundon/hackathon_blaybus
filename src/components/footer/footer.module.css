@@ -27,3 +27,9 @@
   line-height: 150%; /* 18px */
   letter-spacing: -0.3px;
 }
+
+.containerFooter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
