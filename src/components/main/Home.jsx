@@ -148,25 +148,31 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           </div>
         </div>
         <div className={styles.homeMiddleSectionFeaturesList}>
-          {slides.map((slide, index) => (
-            <Swiper
-              className={styles.homeMiddleSectionFeaturesListSwiper}
-              modules={[Navigation, Pagination, Scrollbar, A11y]}
-              spaceBetween={50}
-              slidesPerView={1}
-              pagination={{ clickable: true }}
-              loop={true}>
+          <Swiper
+            className={styles.homeMiddleSectionFeaturesListSwiper}
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            spaceBetween={24}
+            slidesPerView="auto"
+            centeredSlides={true}
+            pagination={{ clickable: true }}
+            loop={true}>
+            {slides.map((slide, index) => (
               <SwiperSlide
                 key={index}
-                className={styles.homeMiddleSectionFeaturesListItem}>
-                <img
-                  src={slide.image}
-                  alt={slide.name}
-                  className={styles.homeMiddleSectionFeaturesListImage}
-                />
+                className={styles.homeMiddleSectionFeaturesListSlide}>
+                <div className={styles.homeMiddleSectionFeaturesListItem}>
+                  <img
+                    src={slide.image}
+                    alt={slide.name}
+                    className={styles.homeMiddleSectionFeaturesListImage}
+                  />
+                  <p className={styles.homeMiddleSectionFeaturesListSlideTitle}>
+                    {slide.name}
+                  </p>
+                </div>
               </SwiperSlide>
-            </Swiper>
-          ))}
+            ))}
+          </Swiper>
         </div>
         <div className={styles.homeMiddleSectionFeaturesListTitle}>
           <h1 className={styles.homeMiddleSectionFeaturesListTitleText}>
