@@ -20,14 +20,20 @@ import screw from "./drone/Screw.svg";
 import xyz from "./drone/xyz.svg";
 
 import robotArm from "./robotArm/RobotArm.svg";
-import base from "./robotArm/RobotCrankshaft.svg";
-import waist from "./robotArm/Connectingrod.svg";
-import lowerArm from "./robotArm/Connectingrod-1.svg";
-import upperArm from "./robotArm/ConnectingRodCap.svg";
-import wristJoint from "./robotArm/RobotConrodBolt.svg";
+import waistLing from "./robotArm/RobotCrankshaft.svg";
+import base from "./robotArm/Connectingrod.svg";
+import gripperFrame from "./robotArm/Connectingrod-1.svg";
+import gripperFinger from "./robotArm/ConnectingRodCap.svg";
+import lowerArm from "./robotArm/RobotConrodBolt.svg";
 import wristLink from "./robotArm/PistonPin.svg";
-import gripperFrame from "./robotArm/RoboPiston.svg";
-import gripperFinger from "./robotArm/RobotPistonRing.svg";
+import wristJoint from "./robotArm/RoboPiston.svg";
+import upperArm from "./robotArm/RobotPistonRing.svg";
+
+import suspension from "./suspension/suspension.svg";
+import suspensionRod from "./suspension/ConnectingRodCap.svg";
+import suspensionBase from "./suspension/ConrodBolt.svg";
+import suspensionSpring from "./suspension/Crankshaft.svg";
+import SuspensionNut from "./suspension/piston.svg";
 
 export const v4Images = [
   v4Engine,
@@ -58,11 +64,19 @@ export const droneImages = [
 export const robotArmImages = [
   robotArm,
   base,
-  waist,
+  waistLing,
   lowerArm,
   upperArm,
   wristJoint,
   wristLink,
   gripperFrame,
   gripperFinger,
+];
+
+export const suspensionImages = [
+  suspension,
+  suspensionBase,
+  SuspensionNut,
+  suspensionRod,
+  suspensionSpring,
 ];

@@ -1,4 +1,5 @@
 import { Suspense, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, OrbitControls } from "@react-three/drei";
 import V4Screen from "../object/v4";
@@ -6,9 +7,10 @@ import RobotArms from "../object/robotArm";
 import Drone from "../object/drone";
 import CameraFocus from "../camera/camera";
 import styles from "./scene.module.css";
-import { object } from "../../../consts/object";
 import icon_arrow from "../../../assets/icon_arrow-up.svg";
 import SideScene from "./sideScene";
+import Suspension from "../object/suspension";
+import Header from "../../header/Header";
 
 /** 탭 전환 시 카메라 위치·FOV 갱신 (Canvas의 camera prop은 최초 1회만 적용됨) */
 function CameraByObject({ selectedObject }) {
@@ -20,9 +22,12 @@ function CameraByObject({ selectedObject }) {
     } else if (selectedObject === "Drone") {
       camera.position.set(5, 5, 7);
       camera.fov = 3.5;
+    } else if (selectedObject === "Suspension") {
+      camera.position.set(-11, 15, 10);
+      camera.fov = 1;
     } else {
       camera.position.set(-11, 10, 10);
-      camera.fov = 3;
+      camera.fov = 3.5;
     }
     camera.updateProjectionMatrix();
   }, [selectedObject, camera]);
@@ -40,6 +45,9 @@ export default function Scene() {
   const [selected, setSelected] = useState("수동조절");
   const rangeRef = useRef(null);
   const controlsRef = useRef();
+  const canvasWrapperRef = useRef(null);
+  const sideSceneRef = useRef(null);
+  const [showService, setShowService] = useState(false);
 
   useEffect(() => {
     if (!rangeRef.current) return;
@@ -49,6 +57,19 @@ export default function Scene() {
       `${disassemble * 100}%`
     );
   }, [disassemble]);
+
+  // 바깥 영역 클릭 시 선택 해제 (서스펜션 포함 모든 오브젝트)
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      const inCanvas = canvasWrapperRef.current?.contains(e.target);
+      const inSideScene = sideSceneRef.current?.contains(e.target);
+      if (!inCanvas && !inSideScene) {
+        setSelectedPart(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleChangeValue = (e) => {
     setTextValue(e.target.value);
@@ -60,25 +81,12 @@ export default function Scene() {
 
   return (
     <main className={styles.mainContainer}>
-      <nav className={styles.content}>
-        <div className={styles.titleContainer}>
-          <img src="/" className={styles.img} />
-          <p className={styles.title}>SIMVEX</p>
-          <p className={styles.description}>서비스 자세히보기</p>
-          <div className={styles.option}>
-            {object.map((item, index) => (
-              <p
-                key={index}
-                className={
-                  selectedObject === item ? styles.item : styles.noneItem
-                }
-                onClick={() => setSelectedObject(item)}>
-                {item}
-              </p>
-            ))}
-          </div>
-        </div>
-      </nav>
+      <Header
+        showService={showService}
+        setShowService={setShowService}
+        selectedObject={selectedObject}
+        setSelectedObject={setSelectedObject}
+      />
       <div className={styles.sceneContainer}>
         <div className={styles.bottomButtonContainer}>
           <div className={styles.percentContainer}>
@@ -145,62 +153,72 @@ export default function Scene() {
             </button>
           </div>
         </div>
-        <Canvas
-          camera={{ position: [-11, 10, 10], fov: 3, near: 1, far: 1000 }}
-          gl={{ antialias: true }}
-          shadows
-          style={{ transform: "translate(-25%, 5%)" }}
-          onPointerMissed={() => setSelectedPart(null)}
-          className={styles.canvas}>
-          <CameraByObject selectedObject={selectedObject} />
-          <directionalLight
-            intensity={1.4}
-            position={[10, 10, 10]}
-            castShadow
-          />
-          <ambientLight intensity={1.2} />
-          <directionalLight position={[-5, 8, 5]} intensity={0.5} />
-          <directionalLight position={[0, 12, 0]} intensity={0.4} />
-          <Environment preset="sunset" />
-          <OrbitControls makeDefault ref={controlsRef} />
-          <CameraFocus
-            target={
-              selectedPart?.intent === "FOCUS_CAMERA" &&
-              selectedPart?.worldPos &&
-              !selectedPart?.id?.startsWith("robot-")
-                ? selectedPart.worldPos
-                : null
-            }
-            controlsRef={controlsRef}
+        <div ref={canvasWrapperRef} style={{ flex: 1 }}>
+          <Canvas
+            camera={{ position: [-11, 10, 10], fov: 3, near: 1, far: 1000 }}
+            gl={{ antialias: true }}
+            shadows
+            style={{ transform: "translate(-25%, 5%)" }}
+            onPointerMissed={() => setSelectedPart(null)}
+            className={styles.canvas}>
+            <CameraByObject selectedObject={selectedObject} />
+            <directionalLight
+              intensity={1.4}
+              position={[10, 10, 10]}
+              castShadow
+            />
+            <ambientLight intensity={1.2} />
+            <directionalLight position={[-5, 8, 5]} intensity={0.5} />
+            <directionalLight position={[0, 12, 0]} intensity={0.4} />
+            <Environment preset="sunset" />
+            <OrbitControls makeDefault ref={controlsRef} />
+            <CameraFocus
+              target={
+                selectedPart?.intent === "FOCUS_CAMERA" &&
+                selectedPart?.worldPos &&
+                !selectedPart?.id?.startsWith("robot-")
+                  ? selectedPart.worldPos
+                  : null
+              }
+              controlsRef={controlsRef}
+              selectedObject={selectedObject}
+            />
+            <Suspense fallback={null}>
+              {selectedObject === "Robot Arm" ? (
+                <RobotArms
+                  selectedPart={selectedPart}
+                  setSelectedPart={setSelectedPart}
+                  disassemble={disassemble}
+                />
+              ) : selectedObject === "Drone" ? (
+                <Drone
+                  selectedPart={selectedPart}
+                  setSelectedPart={setSelectedPart}
+                  disassemble={disassemble}
+                />
+              ) : selectedObject === "Suspension" ? (
+                <Suspension
+                  selectedPart={selectedPart}
+                  setSelectedPart={setSelectedPart}
+                  disassemble={disassemble}
+                />
+              ) : (
+                <V4Screen
+                  selectedPart={selectedPart}
+                  setSelectedPart={setSelectedPart}
+                  disassemble={disassemble}
+                />
+              )}
+            </Suspense>
+          </Canvas>
+        </div>
+        <div ref={sideSceneRef}>
+          <SideScene
+            selectedPart={selectedPart}
             selectedObject={selectedObject}
+            setSelectedPart={setSelectedPart}
           />
-          <Suspense fallback={null}>
-            {selectedObject === "Robot Arm" ? (
-              <RobotArms
-                selectedPart={selectedPart}
-                setSelectedPart={setSelectedPart}
-                disassemble={disassemble}
-              />
-            ) : selectedObject === "Drone" ? (
-              <Drone
-                selectedPart={selectedPart}
-                setSelectedPart={setSelectedPart}
-                disassemble={disassemble}
-              />
-            ) : (
-              <V4Screen
-                selectedPart={selectedPart}
-                setSelectedPart={setSelectedPart}
-                disassemble={disassemble}
-              />
-            )}
-          </Suspense>
-        </Canvas>
-        <SideScene
-          selectedPart={selectedPart}
-          selectedObject={selectedObject}
-          setSelectedPart={setSelectedPart}
-        />
+        </div>
       </div>
       <div className={styles.controlsContainer}>
         <aside className={styles.ai}>
