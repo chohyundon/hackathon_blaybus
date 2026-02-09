@@ -18,7 +18,7 @@ function cloneWithMetalMaterial(
         color: baseColor,
         metalness,
         roughness,
-        envMapIntensity: 1.5,
+        envMapIntensity: 1.2,
       });
       child.castShadow = true;
       child.receiveShadow = true;
@@ -60,7 +60,7 @@ const URLS = {
   piston: pistonUrl,
 };
 
-const METALNESS = 0.75;
+const METALNESS = 0.9;
 const ROUGHNESS = 0.18;
 
 // 분해 시 부품별 이동 방향 [x, y, z] — 슬라이더 1일 때 이만큼 이동
@@ -87,9 +87,12 @@ export default function V4Screen({
   const piston = useGLTF(URLS.piston);
   const ring = useGLTF(URLS.ring);
 
-  const STEEL_COLOR = "#8E9194"; // 약간 푸른 회색
-  const FORGED_STEEL = "#525252";
-  const PISTON_RING_COLOR = "#3F4246"; // 다크 건메탈
+  // 크랭크축: 은색에 가까운 밝은 강철
+  const STEEL_COLOR = "#9FA3A6";
+  // 로드·캡·볼트·핀·피스톤: 중간 회색 강철 (밝지도 검지도 않게)
+  const FORGED_STEEL = "#9FA3A6";
+  // 피스톤 링: 살짝 더 어두운 회색
+  const PISTON_RING_COLOR = "#9FA3A6";
 
   const crankshaftMetal = useMemo(
     () =>
@@ -139,12 +142,7 @@ export default function V4Screen({
   const ringClones = useMemo(
     () =>
       CYLINDER_PISTON_RING_POSITIONS.map(() =>
-        cloneWithMetalMaterial(
-          ring.scene,
-          0.35, // metalness ↓
-          0.55, // roughness ↑
-          PISTON_RING_COLOR
-        )
+        cloneWithMetalMaterial(ring.scene, 0.6, 0.35, PISTON_RING_COLOR)
       ),
     [ring.scene]
   );

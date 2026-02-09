@@ -10,7 +10,6 @@ export default function Header({
   const object = ["V4_Engine", "Robot Arm", "Drone", "Suspension"];
   const navigate = useNavigate();
   const pathname = useLocation();
-  console.log(pathname);
 
   return (
     <nav className={styles.content}>
