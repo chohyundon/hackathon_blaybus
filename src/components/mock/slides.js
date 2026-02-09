@@ -3,13 +3,13 @@ import Drone from "../../assets/Drone.svg";
 import Suspension from "../../assets/Suspension.svg";
 import RobotArm from "../../assets/RobotArm.svg";
 
-import Crankshaft from "../../assets/v4/crankshaft.svg";
-import ConnectingRod from "../../assets/v4/connectingRod.svg";
-import ConnectingRodCap from "../../assets/v4/connectingRodCap.svg";
-import ConrodBolt from "../../assets/v4/conrodBolt.svg";
-import PistonPin from "../../assets/v4/pistonPin.svg";
-import Piston from "../../assets/v4/piston.svg";
-import PistonRing from "../../assets/v4/pistonRing.svg";
+import Crankshaft from "../../assets/v4/Crankshaft.svg";
+import ConnectingRod from "../../assets/v4/ConnectingRod.svg";
+import ConnectingRodCap from "../../assets/v4/ConnectingRodCap.svg";
+import ConrodBolt from "../../assets/v4/ConrodBolt.svg";
+import PistonPin from "../../assets/v4/PistonPin.svg";
+import Piston from "../../assets/v4/Piston.svg";
+import PistonRing from "../../assets/v4/PistonRing.svg";
 
 import armGear from "../../assets/drone/ArmGear.svg";
 import beaterDisc from "../../assets/drone/BeaterDisc.svg";
@@ -34,7 +34,7 @@ import suspension from "../../assets/suspension/suspension.svg";
 import suspensionRod from "../../assets/suspension/ConnectingRodCap.svg";
 import suspensionBase from "../../assets/suspension/ConrodBolt.svg";
 import suspensionSpring from "../../assets/suspension/Crankshaft.svg";
-import SuspensionNut from "../../assets/suspension/piston.svg";
+import SuspensionNut from "../../assets/suspension/Piston.svg";
 
 export const suspensionImages = [
   suspension,
