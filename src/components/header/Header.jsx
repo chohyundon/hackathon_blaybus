@@ -40,18 +40,7 @@ export default function Header({
           }}>
           학습 리스트
         </p>
-        <p
-          className={
-            pathname.pathname === "/learn"
-              ? styles.descriptionActive
-              : styles.description
-          }
-          onClick={() => {
-            setShowService(true);
-          }}>
-          학습하기
-        </p>
-        {pathname.pathname === "/" && (
+        {pathname.pathname === "/scene" && (
           <div className={styles.option}>
             {object.map((item, index) => (
               <p
