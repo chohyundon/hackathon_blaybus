@@ -11,6 +11,8 @@ import icon_arrow from "../../../assets/icon_arrow-up.svg";
 import SideScene from "./sideScene";
 import Suspension from "../object/suspension";
 import Header from "../../header/Header";
+import { useMemoStore } from "../../../store/useMemoStore";
+import Memo from "../../memo/Memo";
 
 /** 탭 전환 시 카메라 위치·FOV 갱신 (Canvas의 camera prop은 최초 1회만 적용됨) */
 function CameraByObject({ selectedObject }) {
@@ -48,6 +50,8 @@ export default function Scene() {
   const canvasWrapperRef = useRef(null);
   const sideSceneRef = useRef(null);
   const [showService, setShowService] = useState(false);
+  const setMemos = useMemoStore((state) => state.setMemos);
+  const memoStore = useMemoStore((state) => state.memos);
 
   useEffect(() => {
     if (!rangeRef.current) return;
@@ -77,6 +81,18 @@ export default function Scene() {
 
   const handleAiValue = (e) => {
     setAiValue(e.target.value);
+  };
+
+  const handleSaveMemo = () => {
+    setMemos([
+      ...memoStore,
+      {
+        text: textValue,
+        object: selectedObject,
+        date: new Date().toLocaleDateString(),
+      },
+    ]);
+    setTextValue("");
   };
 
   return (
@@ -285,21 +301,13 @@ export default function Scene() {
                 />
                 <div className={styles.buttonContainer}>
                   <button className={styles.cancel}>취소</button>
-                  <button className={styles.okay}>확인</button>
+                  <button className={styles.okay} onClick={handleSaveMemo}>
+                    확인
+                  </button>
                 </div>
               </div>
             ) : (
-              <div className={styles.scrollX}>
-                <div className={styles.memoBox}>
-                  <div className={styles.memoWrapper}>
-                    <p className={styles.memoSecondTitle}>V4_Engine</p>
-                    <p className={styles.memoContent}>
-                      메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모메모
-                    </p>
-                    <p className={styles.day}>2026.02.05</p>
-                  </div>
-                </div>
-              </div>
+              <Memo />
             )}
           </div>
         </aside>

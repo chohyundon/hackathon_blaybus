@@ -115,6 +115,11 @@ nav,
 section {
   display: block;
 }
+html,
+body {
+  background-color: #121212;
+}
+
 body {
   line-height: 1;
 }

@@ -16,7 +16,9 @@ export default function Header({
     <nav className={styles.content}>
       <div className={styles.titleContainer}>
         <img src="/" className={styles.img} />
-        <p className={styles.title}>SIMVEX</p>
+        <p className={styles.title} onClick={() => navigate("/")}>
+          SIMVEX
+        </p>
         <div className={styles.descriptionSeparator}>|</div>
         <p
           className={
@@ -24,7 +26,7 @@ export default function Header({
           }
           onClick={() => {
             setShowService(false);
-            navigate("/");
+            navigate("/scene");
           }}>
           서비스 자세히
         </p>
@@ -37,6 +39,18 @@ export default function Header({
             navigate("/learn-list");
           }}>
           학습 리스트
+        </p>
+        <p
+          className={
+            pathname.pathname === "/learn"
+              ? styles.descriptionActive
+              : styles.description
+          }
+          onClick={() => {
+            setShowService(true);
+            navigate("/learn");
+          }}>
+          학습하기
         </p>
         {pathname.pathname === "/" && (
           <div className={styles.option}>

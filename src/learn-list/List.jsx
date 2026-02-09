@@ -53,7 +53,10 @@ export default function LearnList() {
                 <img src={item.image} alt={item.name} />
               </div>
               <div className={styles.listItemText}>
-                <h3 className={styles.listItemTitle}>{item.name}</h3>
+                <div className={styles.listItemMemoBox}>
+                  <h3 className={styles.listItemTitle}>{item.name}</h3>
+                  <button className={styles.listItemButton}>학습하기</button>
+                </div>
                 <p className={styles.listItemDescriptionText}>핵심 설명</p>
                 <p className={styles.listItemDescription}>{item.description}</p>
               </div>

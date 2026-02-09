@@ -39,6 +39,10 @@
   font-size: 32px;
   font-weight: bold;
   color: #ffffff;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
 .description {
