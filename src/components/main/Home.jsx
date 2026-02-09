@@ -7,6 +7,7 @@ import MainImage1 from "../../assets/left.svg";
 import MainImage2 from "../../assets/left1.svg";
 import MainImage3 from "../../assets/left2.svg";
 import Footer from "../footer/Footer";
+import { useNavigate } from "react-router";
 // Swiper 스타일 import
 import "swiper/css";
 import "swiper/css/navigation";
@@ -21,6 +22,7 @@ import {
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const navigate = useNavigate();
   const mainFeatures = [
     {
       image: MainImage1,
@@ -89,7 +91,13 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           </Swiper>
           <div className={styles.homeSectionDescription}>
             <p>{slides[activeIndex].description}</p>
-            <button className={styles.homeSectionButton}>바로 학습하기</button>
+            <button
+              className={styles.homeSectionButton}
+              onClick={() => {
+                navigate("/scene");
+              }}>
+              바로 학습하기
+            </button>
           </div>
           <div className={styles.homeSectionComponents}>
             <h3 className={styles.homeSectionComponentsTitle}>구성 부품</h3>
