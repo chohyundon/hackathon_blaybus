@@ -48,7 +48,6 @@ export default function Header({
           }
           onClick={() => {
             setShowService(true);
-            navigate("/learn");
           }}>
           학습하기
         </p>

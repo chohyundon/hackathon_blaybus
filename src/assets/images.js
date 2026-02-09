@@ -1,10 +1,11 @@
-import crankshaft from "./v4/Crankshaft.svg";
-import connectingRod from "./v4/ConnectingRod.svg";
-import connectingRodCap from "./v4/ConnectingRodCap.svg";
-import conrodBolt from "./v4/ConrodBolt.svg";
-import pistonPin from "./v4/PistonPin.svg";
-import piston from "./v4/Piston.svg";
-import pistonRing from "./v4/PistonRing.svg";
+// v4 assets - lowercase paths for Linux/Vercel case-sensitive FS
+import crankshaft from "./v4/crankshaft.svg";
+import connectingRod from "./v4/connectingrod.svg";
+import connectingRodCap from "./v4/connectingrodcap.svg";
+import conrodBolt from "./v4/conrodbolt.svg";
+import pistonPin from "./v4/pistonpin.svg";
+import piston from "./v4/piston.svg";
+import pistonRing from "./v4/pistonring.svg";
 import v4Engine from "./v4/v4Engine.svg";
 
 import droneSvg from "./drone/drone.svg";
@@ -30,10 +31,10 @@ import wristJoint from "./robotArm/RoboPiston.svg";
 import upperArm from "./robotArm/RobotPistonRing.svg";
 
 import suspension from "./suspension/suspension.svg";
-import suspensionRod from "./suspension/ConnectingRodCap.svg";
-import suspensionBase from "./suspension/ConrodBolt.svg";
-import suspensionSpring from "./suspension/Crankshaft.svg";
-import SuspensionNut from "./suspension/Piston.svg";
+import suspensionRod from "./suspension/connectingrodcap.svg";
+import suspensionBase from "./suspension/conrodbolt.svg";
+import suspensionSpring from "./suspension/crankshaft.svg";
+import SuspensionNut from "./suspension/piston.svg";
 
 export const v4Images = [
   v4Engine,
