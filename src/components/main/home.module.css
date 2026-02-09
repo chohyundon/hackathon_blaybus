@@ -16,6 +16,7 @@
   display: flex;
   align-items: center;
   height: 100px;
+  gap: 12px;
 }
 
 .homeTitle {
@@ -25,8 +26,8 @@
 }
 
 .homeDescription {
-  padding-left: 20px;
   color: #e2e3e4;
+  padding-left: 8px;
 }
 
 .homeButton {

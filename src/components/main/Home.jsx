@@ -8,6 +8,7 @@ import MainImage2 from "../../assets/left1.svg";
 import MainImage3 from "../../assets/left2.svg";
 import Footer from "../footer/Footer";
 import { useNavigate } from "react-router";
+import logo from "../../assets/logo.svg";
 // Swiper 스타일 import
 import "swiper/css";
 import "swiper/css/navigation";
@@ -58,7 +59,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
     <main className={styles.homeContainer}>
       <div className={styles.homeContent}>
         <header className={styles.homeHeader}>
-          <img src="/" alt="Logo" />
+          <img src={logo} alt="Logo" />
           <h1 className={styles.homeTitle}>SIMVEX</h1>
           <p className={styles.homeDescription}>학습 리스트</p>
           <button className={styles.homeButton}>로그인</button>

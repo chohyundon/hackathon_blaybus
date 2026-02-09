@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router";
 import styles from "../../components/elements/scene/scene.module.css";
+import logo from "../../assets/logo.svg";
 
 export default function Header({
   showService,
@@ -14,7 +15,7 @@ export default function Header({
   return (
     <nav className={styles.content}>
       <div className={styles.titleContainer}>
-        <img src="/" className={styles.img} />
+        <img src={logo} className={styles.img} />
         <p className={styles.title} onClick={() => navigate("/")}>
           SIMVEX
         </p>
