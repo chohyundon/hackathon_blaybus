@@ -59,8 +59,41 @@ export default function Scene() {
   const [controlsActive, setControlsActive] = useState(false);
   const controlsEndTimeoutRef = useRef(null);
   const [aiData, setAiData] = useState([]);
+  const [lastAiPrompt, setLastAiPrompt] = useState("");
+  const [aiText, setAiText] = useState("");
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
+
+  const parseJsonSafely = (value) => {
+    if (typeof value !== "string") return null;
+    try {
+      return JSON.parse(value);
+    } catch {
+      return null;
+    }
+  };
+
+  // 서버가 prompt를 '"string"' 또는 '{"message":"..."}' 처럼 JSON 문자열로 저장하는 케이스 정규화
+  const normalizePromptText = (prompt) => {
+    if (typeof prompt !== "string") return "";
+    const parsed = parseJsonSafely(prompt);
+    if (typeof parsed === "string") return parsed;
+    if (parsed && typeof parsed === "object" && "message" in parsed) {
+      return String(parsed.message ?? "");
+    }
+    return prompt;
+  };
+
+  // response가 그냥 텍스트이거나, '{"message":"..."}' 같이 JSON 문자열인 케이스 모두 처리
+  const normalizeResponseText = (response) => {
+    if (typeof response !== "string") return "";
+    const parsed = parseJsonSafely(response);
+    if (typeof parsed === "string") return parsed;
+    if (parsed && typeof parsed === "object" && "message" in parsed) {
+      return String(parsed.message ?? "");
+    }
+    return response;
+  };
 
   // Scene에서도 사용자 정보 로드 (직접 /scene 진입 시 스토어에 user가 없을 수 있음)
   useEffect(() => {
@@ -185,8 +218,10 @@ export default function Scene() {
 
   const handleSubmitAi = async (e) => {
     e.preventDefault();
-    if (!aiValue.trim()) return;
-    const bodyData = { message: aiValue };
+    const prompt = aiValue.trim();
+    if (!prompt) return;
+    setLastAiPrompt(prompt);
+    const bodyData = { message: prompt };
     try {
       const res = await fetch(apiUrl("/chat"), {
         method: "POST",
@@ -195,25 +230,31 @@ export default function Scene() {
         body: JSON.stringify(bodyData),
       });
 
-      if (res.ok) {
-        setSendAi(true);
-        const getAiData = await fetch(apiUrl(`/conversations`));
-        const aiData = await getAiData.json();
-        setAiData(aiData);
-        setAiValue("");
-      }
+      if (!res.ok) return;
+
+      setSendAi(true);
+
+      const getAiData = await fetch(apiUrl("/conversations"), {
+        credentials: "include",
+      });
+      const data = await getAiData.json();
+      const list = Array.isArray(data)
+        ? data
+        : data?.data ?? data?.conversations ?? [];
+      setAiData(list);
+
+      const matched =
+        [...list]
+          .reverse()
+          .find((item) => normalizePromptText(item.prompt) === prompt) ??
+        list[list.length - 1];
+      setAiText(normalizeResponseText(matched?.response ?? ""));
+
+      setAiValue("");
     } catch (err) {
       console.warn("handleSubmitAi failed", err);
     }
   };
-
-  console.log(aiData);
-
-  const aiText =
-    JSON.parse(aiData.find((item) => item.prompt === aiValue)?.response || "{}")
-      .message || "";
-
-  console.log(aiText);
 
   return (
     <main className={styles.mainContainer}>
@@ -405,16 +446,23 @@ export default function Scene() {
           <p className={styles.aiTitle}>AI 어시스턴트</p>
           <div className={styles.aiInputText}>
             {/* 유저 메시지 */}
-            {sendAi && aiValue.trim() !== "" && (
+            {sendAi && lastAiPrompt.trim() !== "" && (
               <div className={`${styles.message} ${styles.userSend}`}>
-                {aiValue}
+                {lastAiPrompt}
               </div>
             )}
 
             {/* AI 메시지 */}
-            <div className={`${styles.message} ${styles.aiText}`}>
-              {sendAi && aiText}
-            </div>
+            {!aiText ? (
+              <div className={styles.noneAiText}>
+                <span className={styles.circle1}></span>
+                <span className={styles.circle2}></span>
+                <span className={styles.circle3}></span>
+              </div>
+            ) : (
+              aiText.length > 0 &&
+              sendAi && <div className={styles.aiText}>{aiText}</div>
+            )}
           </div>
           <form onSubmit={handleSubmitAi}>
             <div className={styles.inputContainer}>

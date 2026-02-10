@@ -463,11 +463,72 @@
   text-overflow: ellipsis;
 }
 
-.aiText {
+.noneAiText {
   background-color: #303134;
   color: white;
   padding: 12px 20px 16px 20px;
   line-height: 150%;
+  white-space: pre-line;
+  display: flex;
+  border-radius: 16px 16px 16px 0px;
+  width: 20%;
+  gap: 10px;
+  align-items: center;
+}
+
+.circle1 {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #cecfd2;
+  display: inline-block;
+  will-change: transform;
+  animation: aiDotsBounce 0.9s infinite ease-in-out;
+}
+
+.circle2 {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #cecfd2;
+  display: inline-block;
+  will-change: transform;
+  animation: aiDotsBounce 0.9s infinite ease-in-out;
+  animation-delay: 0.12s;
+}
+
+.circle3 {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: white;
+  display: inline-block;
+  will-change: transform;
+  animation: aiDotsBounce 0.9s infinite ease-in-out;
+  animation-delay: 0.24s;
+}
+
+@keyframes aiDotsBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  40% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+.aiText {
+  display: inline;
+  background-color: #303134;
+  color: white;
+  padding: 12px 20px 16px 20px;
+  line-height: 150%;
+  white-space: pre-line;
+  display: flex;
+  border-radius: 16px 16px 16px 0px;
 }
 
 .memoContainer {
