@@ -9,22 +9,25 @@ export default function LoginModal({ setShow, show }) {
     if (e.target === e.currentTarget) setShow(false);
   };
 
-  const onKakaoLogin = async () => {
-    const url = `https://be-dosa.store/oauth2/authorization/kakao`;
-    window.location.href = url;
+  // 로그인 성공 후 백엔드가 이 주소로 리다이렉트해주어야 앱으로 복귀합니다.
+  const getRedirectUri = () => {
+    if (typeof window === "undefined") return "";
+    return `${window.location.origin}/auth/callback`;
+  };
 
-    const response = await fetch("https://be-dosa.store/auth/token", {
-      credentials: "include",
-    });
-    console.log(response);
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data);
-    }
+  const onKakaoLogin = () => {
+    const redirectUri = getRedirectUri();
+    const url = `https://be-dosa.store/oauth2/authorization/kakao?redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}`;
+    window.location.href = url;
   };
 
   const onGoogleLogin = () => {
-    const url = `https://be-dosa.store/oauth2/authorization/google`;
+    const redirectUri = getRedirectUri();
+    const url = `https://be-dosa.store/oauth2/authorization/google?redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}`;
     window.location.href = url;
   };
 
