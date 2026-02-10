@@ -453,6 +453,18 @@
   overflow-x: hidden; /* 가로 스크롤 방지 */
 }
 
+.aiInputText::-webkit-scrollbar {
+  width: 6px;
+}
+
+.aiInputText::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.aiInputText::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+}
 .userSend {
   align-self: flex-end; /* 오른쪽 정렬 */
   max-width: 300px;
@@ -463,8 +475,6 @@
   border-radius: 12px 12px 0 12px;
   background: var(--Lighter, #a6c3fc);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .noneAiText {
@@ -531,8 +541,6 @@
   padding: 12px 20px 16px 20px;
   line-height: 150%;
   white-space: pre-line;
-  overflow-x: hidden; /* 가로 스크롤 방지 */
-  overflow-wrap: anywhere; /* 긴 단어 줄바꿈 */
   word-break: break-word;
   border-radius: 16px 16px 16px 0px;
 }
