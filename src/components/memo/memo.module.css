@@ -9,7 +9,6 @@
   box-sizing: border-box;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  position: relative;
 }
 
 /* 아이템 래퍼 */
@@ -27,6 +26,7 @@
   border-radius: 12px;
   background: #e6eefe;
   flex-shrink: 0;
+  position: relative;
 }
 
 .memoSecondTitle {
@@ -108,14 +108,25 @@
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .modalItem {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #242528;
   font-size: 14px;
-  padding-block: 4px;
   cursor: pointer;
+  text-align: center;
   &:hover {
     opacity: 0.7;
   }
