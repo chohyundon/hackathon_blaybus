@@ -225,6 +225,7 @@ export default function Scene() {
       title: selectedObject,
       body: textValue,
     };
+    console.log("bodyData", bodyData);
     await fetch(apiUrl("/memonote"), {
       method: "POST",
       credentials: "include",
@@ -233,8 +234,6 @@ export default function Scene() {
     });
     setTextValue("");
   };
-
-  console.log("bodyData", bodyData);
 
   const handleZoomIn = () => {
     console.log("zoom in");
