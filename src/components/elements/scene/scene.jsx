@@ -184,8 +184,6 @@ export default function Scene() {
     fetchUser();
   }, [setUser]);
 
-  console.log(user);
-
   useEffect(() => {
     if (!rangeRef.current) return;
 
@@ -252,7 +250,7 @@ export default function Scene() {
   const handleGetAllMemos = async () => {
     setActive("all");
     if (!user?.userId) return;
-    const memos = await fetch(apiUrl(`/memonote/${user.userId}`), {
+    const memos = await fetch(apiUrl(`/memonote?userId=${user.userId}`), {
       credentials: "include",
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -330,8 +328,6 @@ export default function Scene() {
       });
     }
   };
-
-  console.log(chatMessages);
 
   return (
     <main className={styles.mainContainer}>
