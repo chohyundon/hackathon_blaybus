@@ -207,6 +207,8 @@ export default function Scene() {
     }
   };
 
+  console.log(aiData);
+
   const aiText =
     JSON.parse(aiData.find((item) => item.prompt === aiValue)?.response || "{}")
       .message || "";
