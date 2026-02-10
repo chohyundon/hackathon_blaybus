@@ -230,7 +230,7 @@ export default function Scene() {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: bodyData,
+      body: JSON.stringify(bodyData),
     });
     setTextValue("");
   };
