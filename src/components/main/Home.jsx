@@ -1,6 +1,6 @@
 import styles from "./home.module.css";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import MainImage1 from "../../assets/left.svg";
