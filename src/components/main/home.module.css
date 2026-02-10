@@ -328,6 +328,7 @@
   width: 100%;
   height: 290px;
   gap: 20px;
+  overflow: hidden;
 }
 
 .homeMiddleSectionFeaturesListItem {
@@ -337,13 +338,10 @@
 
 .homeMiddleSectionFeaturesListImage {
   display: flex;
-  width: 290px;
-  height: 290px;
+  width: 280px;
+  height: 280px;
   background-color: #242528;
   border-radius: 20px;
-}
-
-.homeMiddleSectionFeaturesListTitle {
 }
 
 .homeMiddleSectionFeaturesListTitleText {

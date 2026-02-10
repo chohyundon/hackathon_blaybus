@@ -182,7 +182,11 @@ AI를 통해 궁금한 내용을 질문해보세요`,
                 className={styles.homeSectionComponentsGradient}
                 aria-hidden="true"
               />
-              <button className={styles.homeSectionComponentsItemButton}>
+              <button
+                className={styles.homeSectionComponentsItemButton}
+                onClick={() => {
+                  navigate("/scene");
+                }}>
                 자세히 보러가기
               </button>
             </div>
