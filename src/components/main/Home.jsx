@@ -63,7 +63,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
 
   useEffect(() => {
     const checkAuth = async () => {
-      const response = await fetch("https://be-dosa.store/auth/token", {
+      const response = await fetch("https://be-dosa.store/users/me", {
         credentials: "include",
       });
       console.log(response);
