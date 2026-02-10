@@ -7,7 +7,10 @@ export default function Memo() {
   const [showModal, setShowModal] = useState(false);
   const memoStore = useMemoStore((state) => state.memos);
   const formatted = (date) => {
-    return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+    if (!date) return "";
+    const d = typeof date === "string" ? new Date(date) : date;
+    if (Number.isNaN(d.getTime())) return String(date);
+    return `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`;
   };
 
   const handleShowModal = () => {
