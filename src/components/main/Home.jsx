@@ -1,6 +1,6 @@
 import styles from "./home.module.css";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import MainImage1 from "../../assets/left.svg";
@@ -21,14 +21,11 @@ import {
   v4Images,
 } from "../mock/slides";
 import LoginModal from "../modal/LoginModal";
-import { useAuthStore } from "../../store/useAuthStore";
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const { isLoggedIn, user, logout } = useAuthStore();
-  console.log(user);
   const mainFeatures = [
     {
       image: MainImage1,
@@ -63,6 +60,18 @@ AI를 통해 궁금한 내용을 질문해보세요`,
   const handleLogin = () => {
     setShow(true);
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await fetch("https://be-dosa.store/auth/token", {
+        credentials: "include",
+        method: "POST",
+      });
+      const data = await user.json();
+      console.log(data);
+    };
+    fetchUser();
+  }, []);
 
   return (
     <main className={styles.homeContainer}>
