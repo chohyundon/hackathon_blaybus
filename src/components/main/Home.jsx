@@ -27,7 +27,8 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const { setUser, setIsLoggedIn } = useAuthStore();
+  const setUser = useAuthStore((state) => state.setUser);
+  const user = useAuthStore((state) => state.user);
 
   const mainFeatures = [
     {
@@ -78,7 +79,6 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           return;
         }
         const data = await tokenRes.json();
-        console.log(data);
         if (data?.accessToken) {
           const meRes = await fetch("https://be-dosa.store/users/me", {
             credentials: "include",
@@ -93,21 +93,16 @@ AI를 통해 궁금한 내용을 질문해보세요`,
             !meRes.headers.get("content-type")?.includes("application/json")
           ) {
             setUser(null);
-            setIsLoggedIn(false);
             return;
           }
           const userData = await meRes.json();
-          console.log(userData);
           setUser(userData);
-          setIsLoggedIn(true);
         } else {
           setUser(null);
-          setIsLoggedIn(false);
         }
       } catch (e) {
         console.warn("fetchUser failed", e);
         setUser(null);
-        setIsLoggedIn(false);
       }
     };
     fetchUser();
@@ -120,9 +115,14 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           <img src={logo} alt="Logo" />
           <h1 className={styles.homeTitle}>SIMVEX</h1>
           <p className={styles.homeDescription}>학습 리스트</p>
-          <button className={styles.homeButton} onClick={handleLogin}>
-            로그인
-          </button>
+          {user ? (
+            <p
+              className={styles.homeUserName}>{`${user.name}님 환영합니다.`}</p>
+          ) : (
+            <button className={styles.homeButton} onClick={handleLogin}>
+              로그인
+            </button>
+          )}
         </header>
         {show && <LoginModal setShow={setShow} show={show} />}
         <section className={styles.homeSection}>

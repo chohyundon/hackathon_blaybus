@@ -56,6 +56,7 @@ export default function Scene() {
   const [zoomIn, setZoomIn] = useState(false);
   const [controlsActive, setControlsActive] = useState(false);
   const controlsEndTimeoutRef = useRef(null);
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
     if (!rangeRef.current) return;
@@ -102,6 +103,37 @@ export default function Scene() {
   const handleZoomIn = () => {
     console.log("zoom in");
     setZoomIn((prev) => !prev);
+  };
+
+  const handleGetMemos = async () => {
+    const bodyData = {
+      userId: user.userId,
+      title: selectedObject,
+      body: textValue,
+    };
+
+    console.log("get파 memos");
+    setActive("memo");
+    await fetch("https://be-dosa.store/memonote", {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: bodyData,
+    });
+  };
+
+  const handleGetAllMemos = async () => {
+    setActive("all");
+    const memos = await fetch(`https://be-dosa.store/memonote/${user.userId}`, {
+      credentials: "include",
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const memoData = await memos.json();
+    console.log(memoData);
   };
 
   return (
@@ -216,38 +248,38 @@ export default function Scene() {
                 <directionalLight position={[0, 12, 0]} intensity={0.4} />
                 <Environment preset="sunset" />
                 <OrbitControls
-                makeDefault
-                ref={controlsRef}
-                minDistance={2}
-                maxDistance={80}
-                enableDamping
-                dampingFactor={0.05}
-                onStart={() => {
-                  if (controlsEndTimeoutRef.current) {
-                    clearTimeout(controlsEndTimeoutRef.current);
-                    controlsEndTimeoutRef.current = null;
+                  makeDefault
+                  ref={controlsRef}
+                  minDistance={2}
+                  maxDistance={80}
+                  enableDamping
+                  dampingFactor={0.05}
+                  onStart={() => {
+                    if (controlsEndTimeoutRef.current) {
+                      clearTimeout(controlsEndTimeoutRef.current);
+                      controlsEndTimeoutRef.current = null;
+                    }
+                    setControlsActive(true);
+                  }}
+                  onEnd={() => {
+                    controlsEndTimeoutRef.current = setTimeout(
+                      () => setControlsActive(false),
+                      400
+                    );
+                  }}
+                />
+                <CameraFocus
+                  target={
+                    selectedPart?.intent === "FOCUS_CAMERA" &&
+                    selectedPart?.worldPos &&
+                    !selectedPart?.id?.startsWith("robot-")
+                      ? selectedPart.worldPos
+                      : null
                   }
-                  setControlsActive(true);
-                }}
-                onEnd={() => {
-                  controlsEndTimeoutRef.current = setTimeout(
-                    () => setControlsActive(false),
-                    400
-                  );
-                }}
-              />
-<CameraFocus
-                target={
-                  selectedPart?.intent === "FOCUS_CAMERA" &&
-                  selectedPart?.worldPos &&
-                  !selectedPart?.id?.startsWith("robot-")
-                    ? selectedPart.worldPos
-                    : null
-                }
-                controlsRef={controlsRef}
-                selectedObject={selectedObject}
-                enableFocus={!controlsActive}
-              />
+                  controlsRef={controlsRef}
+                  selectedObject={selectedObject}
+                  enableFocus={!controlsActive}
+                />
                 <Suspense fallback={null}>
                   {selectedObject === "Robot Arm" ? (
                     <RobotArms
@@ -326,7 +358,7 @@ export default function Scene() {
                   className={`${styles.tab} ${
                     active === "memo" ? styles.tabActive : styles.tabInactive
                   }`}
-                  onClick={() => setActive("memo")}>
+                  onClick={handleGetMemos}>
                   메모장
                 </p>
 
@@ -334,7 +366,7 @@ export default function Scene() {
                   className={`${styles.tab} ${
                     active === "all" ? styles.tabActive : styles.tabInactive
                   }`}
-                  onClick={() => setActive("all")}>
+                  onClick={handleGetAllMemos}>
                   전체메모
                 </p>
               </div>
