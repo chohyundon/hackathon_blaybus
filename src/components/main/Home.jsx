@@ -65,6 +65,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
     const checkAuth = async () => {
       const response = await fetch("https://be-dosa.store/users/me", {
         credentials: "include",
+        method: "GET",
       });
       console.log(response);
     };
