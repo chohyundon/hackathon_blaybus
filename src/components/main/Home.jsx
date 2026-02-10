@@ -80,18 +80,9 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           <img src={logo} alt="Logo" />
           <h1 className={styles.homeTitle}>SIMVEX</h1>
           <p className={styles.homeDescription}>학습 리스트</p>
-          {isLoggedIn ? (
-            <div className={styles.homeUserRow}>
-              <span className={styles.homeUserName}>{user}</span>
-              <button className={styles.homeButton} onClick={logout}>
-                로그아웃
-              </button>
-            </div>
-          ) : (
-            <button className={styles.homeButton} onClick={handleLogin}>
-              로그인
-            </button>
-          )}
+          <button className={styles.homeButton} onClick={handleLogin}>
+            로그인
+          </button>
         </header>
         {show && <LoginModal setShow={setShow} show={show} />}
         <section className={styles.homeSection}>
