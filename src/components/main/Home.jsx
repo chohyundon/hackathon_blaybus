@@ -26,6 +26,8 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
+  const setUser = useAuthStore((state) => state.setUser);
+
   const mainFeatures = [
     {
       image: MainImage1,
@@ -69,7 +71,17 @@ AI를 통해 궁금한 내용을 질문해보세요`,
       });
       const data = await user.json();
       // data.name을 사용자 이름으로 설정
-      console.log(data);
+      if (data?.accessToken) {
+        const user = await fetch("https://be-dosa.store/users/me", {
+          credentials: "include",
+          method: "GET",
+        });
+        const userData = await user.json();
+        console.log(userData);
+        setUser(userData);
+      } else {
+        setIsLoggedIn(false);
+      }
     };
     fetchUser();
   }, []);
