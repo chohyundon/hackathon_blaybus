@@ -92,6 +92,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
             return;
           }
           const userData = await meRes.json();
+          console.log(userData);
           setUser(userData);
           setIsLoggedIn(true);
         } else {
@@ -106,6 +107,8 @@ AI를 통해 궁금한 내용을 질문해보세요`,
     };
     fetchUser();
   }, []);
+
+  console.log(user);
 
   return (
     <main className={styles.homeContainer}>
