@@ -379,6 +379,7 @@
   border-radius: 32px;
   background: #242528;
   height: 65%;
+  min-height: 0; /* 내부 스크롤 허용 */
   min-width: 0;
   flex-shrink: 0;
 }
@@ -445,8 +446,11 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  height: 100%;
   gap: 24px;
+  flex: 1; /* 타이틀/입력창 제외한 남은 영역 */
+  min-height: 0; /* ⭐ 없으면 overflow 스크롤 안 됨 */
+  overflow-y: auto;
+  overflow-x: hidden; /* 가로 스크롤 방지 */
 }
 
 .userSend {
@@ -521,13 +525,15 @@
 }
 
 .aiText {
-  display: inline;
+  display: block;
   background-color: #303134;
   color: white;
   padding: 12px 20px 16px 20px;
   line-height: 150%;
   white-space: pre-line;
-  display: flex;
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+  overflow-wrap: anywhere; /* 긴 단어 줄바꿈 */
+  word-break: break-word;
   border-radius: 16px 16px 16px 0px;
 }
 

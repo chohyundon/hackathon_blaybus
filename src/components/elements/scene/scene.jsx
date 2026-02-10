@@ -46,7 +46,6 @@ export default function Scene() {
   const [active, setActive] = useState("memo");
   const [textValue, setTextValue] = useState("");
   const [aiValue, setAiValue] = useState("");
-  const [sendAi, setSendAi] = useState(false);
   const [selected, setSelected] = useState("수동조절");
   const rangeRef = useRef(null);
   const controlsRef = useRef();
@@ -59,8 +58,8 @@ export default function Scene() {
   const [controlsActive, setControlsActive] = useState(false);
   const controlsEndTimeoutRef = useRef(null);
   const [aiData, setAiData] = useState([]);
-  const [lastAiPrompt, setLastAiPrompt] = useState("");
-  const [aiText, setAiText] = useState("");
+  const [chatMessages, setChatMessages] = useState([]); // { id, role: "user"|"ai", type: "text"|"loading", text? }
+  const chatBottomRef = useRef(null);
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
 
@@ -94,6 +93,53 @@ export default function Scene() {
     }
     return response;
   };
+
+  // API 대화 목록 [{ prompt, response, id, timestamp }, ...] → 채팅 메시지 배열로 변환 (prompt=유저, response=AI)
+  const conversationsToChatMessages = (list) => {
+    const arr = Array.isArray(list) ? list : [];
+    const out = [];
+    arr.forEach((item) => {
+      const userText = normalizePromptText(item.prompt);
+      const aiText = normalizeResponseText(item.response);
+      const idBase = item.id ?? out.length;
+      out.push({
+        id: `${idBase}-u`,
+        role: "user",
+        type: "text",
+        text: userText,
+      });
+      out.push({ id: `${idBase}-a`, role: "ai", type: "text", text: aiText });
+    });
+    return out;
+  };
+
+  // 채팅이 추가될 때 항상 맨 아래로 스크롤
+  useEffect(() => {
+    chatBottomRef.current?.scrollIntoView({ block: "end" });
+  }, [chatMessages.length]);
+
+  // 진입 시 기존 대화 목록 로드 (API: prompt=유저 메시지, response=AI 메시지)
+  useEffect(() => {
+    const loadConversations = async () => {
+      try {
+        const res = await fetch(apiUrl("/conversations"), {
+          credentials: "include",
+        });
+        if (!res.ok) return;
+        const contentType = res.headers.get("content-type");
+        if (!contentType?.includes("application/json")) return;
+        const data = await res.json();
+        const list = Array.isArray(data)
+          ? data
+          : data?.data ?? data?.conversations ?? [];
+        setChatMessages(conversationsToChatMessages(list));
+        setAiData(list);
+      } catch (e) {
+        console.warn("loadConversations failed", e);
+      }
+    };
+    loadConversations();
+  }, []);
 
   // Scene에서도 사용자 정보 로드 (직접 /scene 진입 시 스토어에 user가 없을 수 있음)
   useEffect(() => {
@@ -220,7 +266,14 @@ export default function Scene() {
     e.preventDefault();
     const prompt = aiValue.trim();
     if (!prompt) return;
-    setLastAiPrompt(prompt);
+    const userMsgId = `${Date.now()}-u`;
+    const aiLoadingId = `${Date.now()}-a`;
+    setChatMessages((prev) => [
+      ...prev,
+      { id: userMsgId, role: "user", type: "text", text: prompt },
+      { id: aiLoadingId, role: "ai", type: "loading" },
+    ]);
+    setAiValue("");
     const bodyData = { message: prompt };
     try {
       const res = await fetch(apiUrl("/chat"), {
@@ -230,9 +283,7 @@ export default function Scene() {
         body: JSON.stringify(bodyData),
       });
 
-      if (!res.ok) return;
-
-      setSendAi(true);
+      if (!res.ok) throw new Error("chat request failed");
 
       const getAiData = await fetch(apiUrl("/conversations"), {
         credentials: "include",
@@ -242,21 +293,29 @@ export default function Scene() {
         ? data
         : data?.data ?? data?.conversations ?? [];
       setAiData(list);
-
-      const matched =
-        [...list]
-          .reverse()
-          .find((item) => normalizePromptText(item.prompt) === prompt) ??
-        list[list.length - 1];
-      setAiText(normalizeResponseText(matched?.response ?? ""));
-
-      setAiValue("");
+      // API 목록(prompt=유저, response=AI)으로 채팅 전체 갱신
+      setChatMessages(conversationsToChatMessages(list));
     } catch (err) {
       console.warn("handleSubmitAi failed", err);
+      // 실패 시에도 loading을 에러 메시지로 교체
+      setChatMessages((prev) => {
+        const next = [...prev];
+        for (let i = next.length - 1; i >= 0; i -= 1) {
+          if (next[i]?.role === "ai" && next[i]?.type === "loading") {
+            next[i] = {
+              ...next[i],
+              type: "text",
+              text: "응답을 가져오지 못했어요. 잠시 후 다시 시도해 주세요.",
+            };
+            return next;
+          }
+        }
+        return next;
+      });
     }
   };
 
-  console.log(memoStore);
+  console.log(chatMessages);
 
   return (
     <main className={styles.mainContainer}>
@@ -447,24 +506,24 @@ export default function Scene() {
         <aside className={styles.ai}>
           <p className={styles.aiTitle}>AI 어시스턴트</p>
           <div className={styles.aiInputText}>
-            {/* 유저 메시지 */}
-            {sendAi && lastAiPrompt.trim() !== "" && (
-              <div className={`${styles.message} ${styles.userSend}`}>
-                {lastAiPrompt}
-              </div>
+            {chatMessages.map((m) =>
+              m.type === "loading" ? (
+                <div key={m.id} className={styles.noneAiText}>
+                  <span className={styles.circle1}></span>
+                  <span className={styles.circle2}></span>
+                  <span className={styles.circle3}></span>
+                </div>
+              ) : m.role === "user" ? (
+                <div key={m.id} className={styles.userSend}>
+                  {m.text}
+                </div>
+              ) : (
+                <div key={m.id} className={styles.aiText}>
+                  {m.text}
+                </div>
+              )
             )}
-
-            {/* AI 메시지 */}
-            {!aiText ? (
-              <div className={styles.noneAiText}>
-                <span className={styles.circle1}></span>
-                <span className={styles.circle2}></span>
-                <span className={styles.circle3}></span>
-              </div>
-            ) : (
-              aiText.length > 0 &&
-              sendAi && <div className={styles.aiText}>{aiText}</div>
-            )}
+            <div ref={chatBottomRef} />
           </div>
           <form onSubmit={handleSubmitAi}>
             <div className={styles.inputContainer}>
