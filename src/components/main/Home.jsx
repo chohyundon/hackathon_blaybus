@@ -82,6 +82,10 @@ AI를 통해 궁금한 내용을 질문해보세요`,
         if (data?.accessToken) {
           const meRes = await fetch("https://be-dosa.store/users/me", {
             credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${data.accessToken}`,
+            },
             method: "GET",
           });
           if (
