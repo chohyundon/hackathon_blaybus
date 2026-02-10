@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMemoStore } from "../../store/useMemoStore";
 import styles from "./memo.module.css";
-import etc_Icon from "../../assets/etc_Icon.svg";
+import etc_Icon from "../../assets/etc.svg";
 
 export default function Memo() {
   const [showModal, setShowModal] = useState(false);
