@@ -417,19 +417,28 @@
   box-shadow: 0 0 20px 0 rgba(35, 107, 246, 0.2);
 }
 
-.arrowIcon {
+.arrowButton {
   position: absolute;
   right: 8px;
+  border: none;
   border-radius: 105px;
   background: #236bf6;
   display: flex;
+  align-items: center;
+  justify-content: center;
   width: 42px;
   height: 42px;
-  padding: 8.4px;
+  padding: 0;
   cursor: pointer;
-  &:hover {
-    opacity: 0.7;
-  }
+}
+.arrowButton:hover {
+  opacity: 0.7;
+}
+
+.arrowIcon {
+  width: 24px;
+  height: 24px;
+  display: block;
 }
 
 .aiInputText {

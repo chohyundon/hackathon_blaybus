@@ -108,6 +108,8 @@ AI를 통해 궁금한 내용을 질문해보세요`,
     fetchUser();
   }, []);
 
+  console.log(user);
+
   return (
     <main className={styles.homeContainer}>
       <div className={styles.homeContent}>

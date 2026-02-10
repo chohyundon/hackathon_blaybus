@@ -107,34 +107,56 @@ export default function Scene() {
   };
 
   const handleGetMemos = async () => {
+    if (!user?.userId) return;
     const bodyData = {
       userId: user.userId,
       title: selectedObject,
       body: textValue,
     };
-
-    console.log("get파 memos");
     setActive("memo");
     await fetch("https://be-dosa.store/memonote", {
+      method: "POST",
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: bodyData,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bodyData),
     });
   };
 
   const handleGetAllMemos = async () => {
+    if (!user?.userId) return;
     setActive("all");
     const memos = await fetch(`https://be-dosa.store/memonote/${user.userId}`, {
       credentials: "include",
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
-    const memoData = await memos.json();
-    console.log(memoData);
+    const contentType = memos.headers.get("content-type");
+    if (memos.ok && contentType?.includes("application/json")) {
+      const memoData = await memos.json();
+      console.log(memoData);
+    }
+  };
+
+  const handleSubmitAi = async (e) => {
+    e.preventDefault();
+    if (!aiValue.trim()) return;
+    const bodyData = { message: aiValue };
+    try {
+      const res = await fetch("https://be-dosa.store/chat", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData),
+      });
+      const contentType = res.headers.get("content-type");
+      if (res.ok && contentType?.includes("application/json")) {
+        const aiData = await res.json();
+        console.log(aiData);
+      }
+      setSendAi(true);
+    } catch (err) {
+      console.warn("handleSubmitAi failed", err);
+    }
   };
 
   return (
@@ -336,22 +358,29 @@ export default function Scene() {
                   의하여 법률에 의한 재판을 받을 권리를 가진다.
                 </div>
               </div>
-              <div className={styles.inputContainer}>
-                <input
-                  id="input"
-                  placeholder="무엇이 궁금하신가요?"
-                  className={styles.input}
-                  value={aiValue}
-                  onChange={handleAiValue}
-                />
-                <img
-                  src={icon_arrow}
-                  width={24}
-                  height={24}
-                  className={styles.arrowIcon}
-                  onClick={() => setSendAi(true)}
-                />
-              </div>
+              <form onSubmit={handleSubmitAi}>
+                <div className={styles.inputContainer}>
+                  <input
+                    id="input"
+                    placeholder="무엇이 궁금하신가요?"
+                    className={styles.input}
+                    value={aiValue}
+                    onChange={(e) => handleAiValue(e)}
+                  />
+                  <button
+                    type="submit"
+                    className={styles.arrowButton}
+                    aria-label="전송">
+                    <img
+                      src={icon_arrow}
+                      width={24}
+                      height={24}
+                      className={styles.arrowIcon}
+                      alt=""
+                    />
+                  </button>
+                </div>
+              </form>
             </aside>
             <aside className={styles.memoContainer}>
               <div className={styles.memoHeader}>
