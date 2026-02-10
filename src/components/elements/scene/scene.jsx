@@ -214,10 +214,14 @@ export default function Scene() {
     setAiValue(e.target.value);
   };
 
+  console.log("user", user.userId);
+
   const handleSaveMemo = async () => {
     if (!user?.userId) return;
     const bodyData = {
       userId: user.userId,
+      machineKey: "1",
+      partKey: "string",
       title: selectedObject,
       body: textValue,
     };
