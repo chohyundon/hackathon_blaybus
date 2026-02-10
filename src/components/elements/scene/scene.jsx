@@ -15,6 +15,7 @@ import Memo from "../../memo/Memo";
 import ZoomInIcon from "../../../assets/ZoomButton.svg";
 import Zoom from "../../../zoom/Zoom";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { apiUrl } from "../../../api/config";
 
 /** 탭 전환 시 카메라 위치·FOV 갱신 (Canvas의 camera prop은 최초 1회만 적용됨) */
 function CameraByObject({ selectedObject }) {
@@ -64,7 +65,7 @@ export default function Scene() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const tokenRes = await fetch("https://be-dosa.store/auth/token", {
+        const tokenRes = await fetch(apiUrl("/auth/token"), {
           credentials: "include",
           method: "POST",
         });
@@ -75,7 +76,7 @@ export default function Scene() {
         }
         const data = await tokenRes.json();
         if (data?.accessToken) {
-          const meRes = await fetch("https://be-dosa.store/users/me", {
+          const meRes = await fetch(apiUrl("/users/me"), {
             credentials: "include",
             headers: {
               "Content-Type": "application/json",
@@ -102,6 +103,8 @@ export default function Scene() {
     };
     fetchUser();
   }, [setUser]);
+
+  console.log(user);
 
   useEffect(() => {
     if (!rangeRef.current) return;
@@ -158,7 +161,7 @@ export default function Scene() {
       title: selectedObject,
       body: textValue,
     };
-    await fetch("https://be-dosa.store/memonote", {
+    await fetch(apiUrl("/memonote"), {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -169,7 +172,7 @@ export default function Scene() {
   const handleGetAllMemos = async () => {
     setActive("all");
     if (!user?.userId) return;
-    const memos = await fetch(`https://be-dosa.store/memonote/${user.userId}`, {
+    const memos = await fetch(apiUrl(`/memonote/${user.userId}`), {
       credentials: "include",
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -184,7 +187,7 @@ export default function Scene() {
     if (!aiValue.trim()) return;
     const bodyData = { message: aiValue };
     try {
-      const res = await fetch("https://be-dosa.store/chat", {
+      const res = await fetch(apiUrl("/chat"), {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

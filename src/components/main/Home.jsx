@@ -22,6 +22,7 @@ import {
 } from "../mock/slides";
 import LoginModal from "../modal/LoginModal";
 import { useAuthStore } from "../../store/useAuthStore";
+import { apiUrl } from "../../api/config";
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -68,7 +69,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const tokenRes = await fetch("https://be-dosa.store/auth/token", {
+        const tokenRes = await fetch(apiUrl("/auth/token"), {
           credentials: "include",
           method: "POST",
         });
@@ -79,7 +80,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
         }
         const data = await tokenRes.json();
         if (data?.accessToken) {
-          const meRes = await fetch("https://be-dosa.store/users/me", {
+          const meRes = await fetch(apiUrl("/users/me"), {
             credentials: "include",
             headers: {
               "Content-Type": "application/json",
