@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { useMemoStore } from "../../store/useMemoStore";
+import { useAuthStore } from "../../store/useAuthStore";
+import { apiUrl } from "../../api/config";
 import styles from "./memo.module.css";
 import etc_Icon from "../../assets/etc.svg";
 
 export default function Memo() {
   const [showModal, setShowModal] = useState(false);
+  const [selectedMemo, setSelectedMemo] = useState(null);
   const memoStore = useMemoStore((state) => state.memos);
+  const setMemos = useMemoStore((state) => state.setMemos);
+
   const formatted = (date) => {
     if (!date) return "";
     const d = typeof date === "string" ? new Date(date) : date;
@@ -13,21 +18,42 @@ export default function Memo() {
     return `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`;
   };
 
-  const handleShowModal = () => {
+  const handleShowModal = (memo) => {
+    setSelectedMemo(memo);
     setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedMemo(null);
+  };
+
+  const handleDeleteMemo = async () => {
+    if (!selectedMemo?.id) return;
+    try {
+      const res = await fetch(apiUrl(`/memonote/${selectedMemo.id}`), {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) return;
+      setMemos(memoStore.filter((m) => m.id !== selectedMemo.id));
+      handleCloseModal();
+    } catch (e) {
+      console.warn("delete memo failed", e);
+    }
   };
 
   return (
     <div className={styles.scrollX}>
       <div className={styles.memoBox}>
-        {memoStore.map((memo) => (
-          <div className={styles.memoWrapper}>
+        {memoStore.map((memo, index) => (
+          <div key={memo.id ?? index} className={styles.memoWrapper}>
             <div className={styles.memoSecondTitleContainer}>
               <p className={styles.memoSecondTitle}>{memo.object}</p>
               <img
                 src={etc_Icon}
                 alt="etc_Icon"
-                onClick={handleShowModal}
+                onClick={() => handleShowModal(memo)}
                 className={styles.etcIcon}
               />
             </div>
@@ -39,14 +65,16 @@ export default function Memo() {
       {showModal && (
         <div
           className={styles.modal}
-          onClick={() => setShowModal(false)}
+          onClick={handleCloseModal}
           role="presentation"
           aria-hidden="true">
           <div
             className={styles.modalContent}
             onClick={(e) => e.stopPropagation()}>
             <p className={styles.modalItem}>수정</p>
-            <p className={styles.modalItem}>삭제</p>
+            <p className={styles.modalItem} onClick={handleDeleteMemo}>
+              삭제
+            </p>
           </div>
         </div>
       )}

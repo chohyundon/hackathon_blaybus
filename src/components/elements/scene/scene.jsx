@@ -264,6 +264,7 @@ export default function Scene() {
       : memoData?.data ?? memoData?.memos ?? [];
     setMemos(
       list.map((m) => ({
+        id: m.id ?? m.memoId,
         object: m.object ?? m.title ?? "",
         text: m.text ?? m.body ?? "",
         date: m.date ?? m.createdAt ?? "",
