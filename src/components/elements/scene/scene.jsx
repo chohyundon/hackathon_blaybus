@@ -234,6 +234,8 @@ export default function Scene() {
     setTextValue("");
   };
 
+  console.log("bodyData", bodyData);
+
   const handleZoomIn = () => {
     console.log("zoom in");
     setZoomIn((prev) => !prev);
