@@ -9,6 +9,9 @@ import Drone from "../components/elements/object/drone";
 import Suspension from "../components/elements/object/suspension";
 import CameraFocus from "../components/elements/camera/camera";
 import arrowDown from "../assets/dropdown.png";
+import minusIcon from "../assets/minus.svg";
+import plusIcon from "../assets/plus.svg";
+import searchIcon from "../assets/search.svg";
 
 /** 탭 전환 시 카메라 위치·FOV 갱신 */
 function CameraByObject({ selectedObject }) {
@@ -38,12 +41,12 @@ export default function Zoom({
   selectedPart,
   setSelectedPart,
   disassemble,
+  setDisassemble,
 }) {
   const controlsRef = useRef();
   const [controlsActive, setControlsActive] = useState(false);
   const controlsEndTimeoutRef = useRef(null);
   const [selectedButton, setSelectedButton] = useState("수동조절");
-  const [rangeValue, setRangeValue] = useState(0);
 
   const handleZoomOut = () => {
     setZoomIn(false);
@@ -51,6 +54,7 @@ export default function Zoom({
   const handleSelectedButton = (button) => {
     setSelectedButton(button);
   };
+
   return (
     <div className={styles.zoomContainer}>
       <img
@@ -142,7 +146,7 @@ export default function Zoom({
       </div>
       <div className={styles.rightArea}>
         <div className={styles.rightAreaHeader}>
-          <h1 className={styles.rightAreaTitle}>V4_Engine</h1>
+          <h1 className={styles.rightAreaTitle}>{selectedObject}</h1>
           <img src={arrowDown} alt="zoom in" />
         </div>
         <div className={styles.rightAreaButtonContainer}>
@@ -152,7 +156,9 @@ export default function Zoom({
                 ? styles.rightAreaButtonActive
                 : styles.rightAreaButton
             }
-            onClick={() => handleSelectedButton("수동조절")}>
+            onClick={() => {
+              handleSelectedButton("수동조절");
+            }}>
             수동조절
           </p>
           <p
@@ -161,7 +167,10 @@ export default function Zoom({
                 ? styles.rightAreaButtonActive
                 : styles.rightAreaButton
             }
-            onClick={() => handleSelectedButton("완전분해")}>
+            onClick={() => {
+              handleSelectedButton("완전분해");
+              setDisassemble(1);
+            }}>
             완전분해
           </p>
           <p
@@ -170,9 +179,63 @@ export default function Zoom({
                 ? styles.rightAreaButtonActive
                 : styles.rightAreaButton
             }
-            onClick={() => handleSelectedButton("완전결합")}>
+            onClick={() => {
+              handleSelectedButton("완전결합");
+              setDisassemble(0);
+            }}>
             완전결합
           </p>
+        </div>
+        <div
+          className={styles.rightAreaRangeContainer}
+          style={{
+            "--value-percent": disassemble * 100,
+            "--range-progress": `${disassemble * 100}%`,
+          }}>
+          <div className={styles.rightAreaRangeContainerInner}>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={disassemble}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setDisassemble(value);
+                if (
+                  selectedButton === "완전분해" ||
+                  selectedButton === "완전결합"
+                ) {
+                  handleSelectedButton("수동조절");
+                }
+              }}
+              className={styles.rightAreaRange}
+            />
+          </div>
+          <div className={styles.rightAreaRangeCurrentValue}>
+            <span className={styles.rightAreaRangeCurrentBubble}>
+              <img src={searchIcon} alt="search" />
+              {Math.round(disassemble * 100)}%
+            </span>
+          </div>
+          <div className={styles.rightAreaRangeValue}>
+            <p className={styles.rightAreaRangeValueText}>0%</p>
+          </div>
+          <div className={styles.rightAreaRangeValueRight}>
+            <p className={styles.rightAreaRangeValueText}>100%</p>
+          </div>
+          <div className={styles.rightAreaRangeButtonContainer}>
+            <button
+              className={styles.rightAreaRangeButtonMinus}
+              onClick={() => setDisassemble(Math.max(0, disassemble - 0.01))}>
+              <img src={minusIcon} alt="minus" />
+            </button>
+            <button
+              className={styles.rightAreaRangeButtonPlus}
+              onClick={() => setDisassemble(Math.min(1, disassemble + 0.01))}>
+              <img src={plusIcon} alt="plus" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

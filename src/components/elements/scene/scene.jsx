@@ -59,6 +59,8 @@ export default function Scene() {
   const controlsEndTimeoutRef = useRef(null);
   const user = useAuthStore((state) => state.user);
 
+  console.log(active);
+
   useEffect(() => {
     if (!rangeRef.current) return;
 
@@ -107,13 +109,13 @@ export default function Scene() {
   };
 
   const handleGetMemos = async () => {
+    setActive("memo");
     if (!user?.userId) return;
     const bodyData = {
       userId: user.userId,
       title: selectedObject,
       body: textValue,
     };
-    setActive("memo");
     await fetch("https://be-dosa.store/memonote", {
       method: "POST",
       credentials: "include",
@@ -123,8 +125,8 @@ export default function Scene() {
   };
 
   const handleGetAllMemos = async () => {
-    if (!user?.userId) return;
     setActive("all");
+    if (!user?.userId) return;
     const memos = await fetch(`https://be-dosa.store/memonote/${user.userId}`, {
       credentials: "include",
       method: "GET",
@@ -161,23 +163,24 @@ export default function Scene() {
 
   return (
     <main className={styles.mainContainer}>
-      {zoomIn ? (
-        <Zoom
-          setZoomIn={setZoomIn}
-          selectedObject={selectedObject}
-          selectedPart={selectedPart}
-          setSelectedPart={setSelectedPart}
-          disassemble={disassemble}
-        />
-      ) : (
-        <>
-          <Header
-            showService={showService}
-            setShowService={setShowService}
+      <Header
+        showService={showService}
+        setShowService={setShowService}
+        selectedObject={selectedObject}
+        setSelectedObject={setSelectedObject}
+      />
+      <div className={styles.sceneContainer}>
+        {zoomIn ? (
+          <Zoom
+            setZoomIn={setZoomIn}
             selectedObject={selectedObject}
-            setSelectedObject={setSelectedObject}
+            selectedPart={selectedPart}
+            setSelectedPart={setSelectedPart}
+            disassemble={disassemble}
+            setDisassemble={setDisassemble}
           />
-          <div className={styles.sceneContainer}>
+        ) : (
+          <>
             <img
               src={ZoomInIcon}
               width={40}
@@ -337,94 +340,95 @@ export default function Scene() {
                 selectedPart={selectedPart}
                 selectedObject={selectedObject}
                 setSelectedPart={setSelectedPart}
+                onOpenZoom={() => setZoomIn(true)}
               />
             </div>
-          </div>
-          <div className={styles.controlsContainer}>
-            <aside className={styles.ai}>
-              <p className={styles.aiTitle}>AI 어시스턴트</p>
-              <div className={styles.aiInputText}>
-                {/* 유저 메시지 */}
-                {sendAi && aiValue.trim() !== "" && (
-                  <div className={`${styles.message} ${styles.userSend}`}>
-                    {aiValue}
-                  </div>
-                )}
-
-                {/* AI 메시지 */}
-                <div className={`${styles.message} ${styles.aiText}`}>
-                  ~~대한민국의 경제질서는 개인과 기업의 경제상의 자유와 창의를
-                  존중함을 기본으로 한다. 모든 국민은 헌법과 법률이 정한 법관에
-                  의하여 법률에 의한 재판을 받을 권리를 가진다.
-                </div>
+          </>
+        )}
+      </div>
+      <div className={styles.controlsContainer}>
+        <aside className={styles.ai}>
+          <p className={styles.aiTitle}>AI 어시스턴트</p>
+          <div className={styles.aiInputText}>
+            {/* 유저 메시지 */}
+            {sendAi && aiValue.trim() !== "" && (
+              <div className={`${styles.message} ${styles.userSend}`}>
+                {aiValue}
               </div>
-              <form onSubmit={handleSubmitAi}>
-                <div className={styles.inputContainer}>
-                  <input
-                    id="input"
-                    placeholder="무엇이 궁금하신가요?"
-                    className={styles.input}
-                    value={aiValue}
-                    onChange={(e) => handleAiValue(e)}
-                  />
-                  <button
-                    type="submit"
-                    className={styles.arrowButton}
-                    aria-label="전송">
-                    <img
-                      src={icon_arrow}
-                      width={24}
-                      height={24}
-                      className={styles.arrowIcon}
-                      alt=""
-                    />
+            )}
+
+            {/* AI 메시지 */}
+            <div className={`${styles.message} ${styles.aiText}`}>
+              ~~대한민국의 경제질서는 개인과 기업의 경제상의 자유와 창의를
+              존중함을 기본으로 한다. 모든 국민은 헌법과 법률이 정한 법관에
+              의하여 법률에 의한 재판을 받을 권리를 가진다.
+            </div>
+          </div>
+          <form onSubmit={handleSubmitAi}>
+            <div className={styles.inputContainer}>
+              <input
+                id="input"
+                placeholder="무엇이 궁금하신가요?"
+                className={styles.input}
+                value={aiValue}
+                onChange={(e) => handleAiValue(e)}
+              />
+              <button
+                type="submit"
+                className={styles.arrowButton}
+                aria-label="전송">
+                <img
+                  src={icon_arrow}
+                  width={24}
+                  height={24}
+                  className={styles.arrowIcon}
+                  alt=""
+                />
+              </button>
+            </div>
+          </form>
+        </aside>
+        <aside className={styles.memoContainer}>
+          <div className={styles.memoHeader}>
+            <p
+              className={`${styles.tab} ${
+                active === "memo" ? styles.tabActive : styles.tabInactive
+              }`}
+              onClick={handleGetMemos}>
+              메모장
+            </p>
+
+            <p
+              className={`${styles.tab} ${
+                active === "all" ? styles.tabActive : styles.tabInactive
+              }`}
+              onClick={handleGetAllMemos}>
+              전체메모
+            </p>
+          </div>
+          <div className={styles.textSection}>
+            {active === "memo" ? (
+              <div className={styles.textAreaContainer}>
+                <textarea
+                  id="textArea"
+                  placeholder="학습내용이나 아이디어를 남겨보세요"
+                  className={styles.textArea}
+                  value={textValue}
+                  onChange={handleChangeValue}
+                />
+                <div className={styles.buttonContainer}>
+                  <button className={styles.cancel}>취소</button>
+                  <button className={styles.okay} onClick={handleSaveMemo}>
+                    확인
                   </button>
                 </div>
-              </form>
-            </aside>
-            <aside className={styles.memoContainer}>
-              <div className={styles.memoHeader}>
-                <p
-                  className={`${styles.tab} ${
-                    active === "memo" ? styles.tabActive : styles.tabInactive
-                  }`}
-                  onClick={handleGetMemos}>
-                  메모장
-                </p>
-
-                <p
-                  className={`${styles.tab} ${
-                    active === "all" ? styles.tabActive : styles.tabInactive
-                  }`}
-                  onClick={handleGetAllMemos}>
-                  전체메모
-                </p>
               </div>
-              <div className={styles.textSection}>
-                {active === "memo" ? (
-                  <div className={styles.textAreaContainer}>
-                    <textarea
-                      id="textArea"
-                      placeholder="학습내용이나 아이디어를 남겨보세요"
-                      className={styles.textArea}
-                      value={textValue}
-                      onChange={handleChangeValue}
-                    />
-                    <div className={styles.buttonContainer}>
-                      <button className={styles.cancel}>취소</button>
-                      <button className={styles.okay} onClick={handleSaveMemo}>
-                        확인
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <Memo />
-                )}
-              </div>
-            </aside>
+            ) : (
+              <Memo />
+            )}
           </div>
-        </>
-      )}
+        </aside>
+      </div>
     </main>
   );
 }

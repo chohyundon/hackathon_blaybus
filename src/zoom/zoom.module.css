@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
   display: flex;
-  background-color: #18191a;
+  background-color: #242528;
   z-index: 100;
   gap: 40px;
 }
@@ -36,7 +36,6 @@
 .rightArea {
   flex: 1;
   height: 100%;
-  border: 1px solid blue;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -53,14 +52,18 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
 .rightAreaButtonContainer {
   display: flex;
-  width: 50%;
+  width: 70%;
   justify-content: space-around;
   align-items: center;
-  background-color: #242528;
+  background-color: #303134;
   border-radius: 1000px;
   padding: 8px;
   margin-top: 32px;
@@ -90,68 +93,37 @@
   }
 }
 
-/* 슬라이더 블록: 위 100% → 트랙+값말풍선 → 아래 0% */
-.rightAreaRangeBlock {
+.rightAreaRangeContainer {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0;
-  margin: 32px 0 24px;
-}
-
-.rightAreaRangeLabelTop,
-.rightAreaRangeLabelBottom {
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0;
-}
-
-.rightAreaRangeLabelTop {
-  margin-bottom: 8px;
-}
-
-.rightAreaRangeLabelBottom {
-  margin-top: 8px;
-}
-
-.rightAreaSliderColumn {
+  align-items: flex-start;
+  width: 100%;
+  height: 280px;
+  margin-top: 32px;
   position: relative;
-  width: 400px;
-  height: 400px;
-  flex-shrink: 0;
-  border: 1px solid red;
 }
 
-.rightAreaRangeWrapper {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 400px;
-  width: 400px;
+.rightAreaRangeContainerInner {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  pointer-events: none;
+  justify-content: center;
+  width: 1.5%;
+  height: 280px;
+  box-sizing: border-box;
 }
 
-.rightAreaRangeWrapper input {
-  pointer-events: auto;
-}
-
+/* 세로 슬라이더: 트랙 진행(파란색) + thumb 커스텀 */
 .rightAreaRange {
-  margin: 0;
-  width: 400px;
+  width: 280px;
+  min-width: 280px;
   height: 8px;
-  border-radius: 1000px;
+  margin: 0;
+  transform: rotate(-90deg);
+  transform-origin: center center;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  transform-origin: left center;
-  transform: rotate(-90deg);
-  flex-shrink: 0;
-  touch-action: none;
-  background: transparent;
+  border-radius: 1000px;
 }
 
 .rightAreaRange::-webkit-slider-runnable-track {
@@ -173,8 +145,11 @@
   border-radius: 50%;
   background: #236bf6;
   cursor: grab;
-  margin-top: -8px;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+  margin-top: -7px;
+}
+
+.rightAreaRange::-webkit-slider-thumb:active {
+  cursor: grabbing;
 }
 
 .rightAreaRange::-moz-range-track {
@@ -190,36 +165,31 @@
 }
 
 .rightAreaRange::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: #236bf6;
   cursor: grab;
   border: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
-.rightAreaRange:hover {
-  opacity: 0.95;
+.rightAreaRange::-moz-range-thumb:active {
+  cursor: grabbing;
 }
 
-/* 값 말풍선: 트랙 바로 오른쪽(20px), 썸 높이에 맞춰 점선 + 말풍선 */
-.rightAreaValueLine {
+/* 현재 퍼센트: 썸 높이에 맞춰 점선 + 말풍선 */
+.rightAreaRangeCurrentValue {
   position: absolute;
-  left: 20px;
-  bottom: calc(var(--value-percent, 0) * 4px);
-  min-height: 32px;
+  left: 100px;
+  top: 50%;
+  min-height: 28px;
   display: flex;
   align-items: center;
   pointer-events: none;
-  border-left: 2px dashed rgba(255, 255, 255, 0.45);
   padding-left: 8px;
 }
 
-.rightAreaValueBubble {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.rightAreaRangeCurrentBubble {
   padding: 6px 12px;
   background: #303134;
   border-radius: 20px;
@@ -227,39 +197,76 @@
   font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.rightAreaValueIcon {
-  flex-shrink: 0;
+.rightAreaRangeValueRight {
+  position: absolute;
+  left: 5%;
+  width: 30%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
   color: #a9abaf;
+  top: 1%;
 }
 
-/* 하단 - / + 버튼 */
-.rightAreaZoomButtons {
+.rightAreaRangeValue {
+  position: absolute;
+  width: 30%;
+  left: 5%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
+  justify-content: flex-start;
+  align-items: flex-end;
+  color: #a9abaf;
+  bottom: 1%;
+}
+
+.rightAreaRangeButtonContainer {
+  position: absolute;
   margin-top: 24px;
+  top: 100%;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  left: 0%;
+  gap: 20px;
 }
 
-.rightAreaZoomBtn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+.rightAreaRangeButtonMinus {
   border: none;
-  background: #303134;
-  color: #fff;
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  background-color: #303134;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  color: #cecfd2;
+  &:hover {
+    opacity: 0.7;
+  }
+  font-size: 24px;
+  text-align: center;
 }
 
-.rightAreaZoomBtn:hover {
-  background: #3d3f43;
-  opacity: 0.9;
+.rightAreaRangeButtonPlus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: #303134;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  text-align: center;
+  color: #cecfd2;
+  &:hover {
+    opacity: 0.7;
+  }
 }

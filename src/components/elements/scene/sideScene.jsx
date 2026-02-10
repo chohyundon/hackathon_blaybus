@@ -124,6 +124,7 @@ export default function SideScene({
   selectedPart,
   selectedObject,
   setSelectedPart,
+  onOpenZoom,
 }) {
   const [show, setShow] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("crankshaft");
@@ -292,7 +293,17 @@ export default function SideScene({
           {selectedObject}
           <img src={dropdown} className={styles.icon} />
         </p>
-        <img src={closeIcon} width={40} height={40} alt="closeIcon" />
+        <img
+          className={styles.closeIcon}
+          src={closeIcon}
+          width={40}
+          height={40}
+          alt="closeIcon"
+          onClick={() => {
+            if (onOpenZoom) onOpenZoom();
+            setShow(false);
+          }}
+        />
       </div>
       {show && (
         <div className={styles.modal}>
