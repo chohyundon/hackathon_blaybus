@@ -21,6 +21,7 @@ import {
   v4Images,
 } from "../mock/slides";
 import LoginModal from "../modal/LoginModal";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
