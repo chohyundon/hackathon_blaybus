@@ -3,9 +3,14 @@ import styles from "./memo.module.css";
 import etc_Icon from "../../assets/etc_Icon.svg";
 
 export default function Memo() {
+  const [showModal, setShowModal] = useState(false);
   const memoStore = useMemoStore((state) => state.memos);
   const formatted = (date) => {
     return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+  };
+
+  const handleShowModal = () => {
+    setShowModal(true);
   };
 
   return (
@@ -15,13 +20,26 @@ export default function Memo() {
           <div className={styles.memoWrapper}>
             <div className={styles.memoSecondTitleContainer}>
               <p className={styles.memoSecondTitle}>{memo.object}</p>
-              <img src={etc_Icon} alt="etc_Icon" />
+              <img
+                src={etc_Icon}
+                alt="etc_Icon"
+                onClick={handleShowModal}
+                className={styles.etcIcon}
+              />
             </div>
             <p className={styles.memoContent}>{memo.text}</p>
             <p className={styles.day}>{formatted(memo.date)}</p>
           </div>
         ))}
       </div>
+      {showModal && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <p className={styles.modalItem}>수정</p>
+            <p className={styles.modalItem}>삭제</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
