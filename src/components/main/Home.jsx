@@ -77,6 +77,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           method: "GET",
         });
         const userData = await user.json();
+        //시도
         console.log(userData);
         setUser(userData);
       } else {
