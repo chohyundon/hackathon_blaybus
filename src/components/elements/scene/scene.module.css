@@ -545,6 +545,20 @@
   border-radius: 16px 16px 16px 0px;
 }
 
+.loginRequired {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 120px;
+  color: #9aa0a6;
+  font-size: 15px;
+  text-align: center;
+  padding: 20px;
+  border-radius: 16px;
+  background-color: #303134;
+}
+
 .memoContainer {
   flex: 1;
   min-width: 0; /* flex 자식이 콘텐츠만큼 넓어지는 것 방지 */

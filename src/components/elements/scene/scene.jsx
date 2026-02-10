@@ -214,8 +214,6 @@ export default function Scene() {
     setAiValue(e.target.value);
   };
 
-  console.log("user", user.userId);
-
   const handleSaveMemo = async () => {
     if (!user?.userId) return;
     const bodyData = {
@@ -515,49 +513,55 @@ export default function Scene() {
       <div className={styles.controlsContainer}>
         <aside className={styles.ai}>
           <p className={styles.aiTitle}>AI 어시스턴트</p>
-          <div className={styles.aiInputText}>
-            {chatMessages.map((m) =>
-              m.type === "loading" ? (
-                <div key={m.id} className={styles.noneAiText}>
-                  <span className={styles.circle1}></span>
-                  <span className={styles.circle2}></span>
-                  <span className={styles.circle3}></span>
+          {user?.userId ? (
+            <>
+              <div className={styles.aiInputText}>
+                {chatMessages.map((m) =>
+                  m.type === "loading" ? (
+                    <div key={m.id} className={styles.noneAiText}>
+                      <span className={styles.circle1}></span>
+                      <span className={styles.circle2}></span>
+                      <span className={styles.circle3}></span>
+                    </div>
+                  ) : m.role === "user" ? (
+                    <div key={m.id} className={styles.userSend}>
+                      {m.text}
+                    </div>
+                  ) : (
+                    <div key={m.id} className={styles.aiText}>
+                      {m.text}
+                    </div>
+                  )
+                )}
+                <div ref={chatBottomRef} />
+              </div>
+              <form onSubmit={handleSubmitAi}>
+                <div className={styles.inputContainer}>
+                  <input
+                    id="input"
+                    placeholder="무엇이 궁금하신가요?"
+                    className={styles.input}
+                    value={aiValue}
+                    onChange={(e) => handleAiValue(e)}
+                  />
+                  <button
+                    type="submit"
+                    className={styles.arrowButton}
+                    aria-label="전송">
+                    <img
+                      src={icon_arrow}
+                      width={24}
+                      height={24}
+                      className={styles.arrowIcon}
+                      alt=""
+                    />
+                  </button>
                 </div>
-              ) : m.role === "user" ? (
-                <div key={m.id} className={styles.userSend}>
-                  {m.text}
-                </div>
-              ) : (
-                <div key={m.id} className={styles.aiText}>
-                  {m.text}
-                </div>
-              )
-            )}
-            <div ref={chatBottomRef} />
-          </div>
-          <form onSubmit={handleSubmitAi}>
-            <div className={styles.inputContainer}>
-              <input
-                id="input"
-                placeholder="무엇이 궁금하신가요?"
-                className={styles.input}
-                value={aiValue}
-                onChange={(e) => handleAiValue(e)}
-              />
-              <button
-                type="submit"
-                className={styles.arrowButton}
-                aria-label="전송">
-                <img
-                  src={icon_arrow}
-                  width={24}
-                  height={24}
-                  className={styles.arrowIcon}
-                  alt=""
-                />
-              </button>
-            </div>
-          </form>
+              </form>
+            </>
+          ) : (
+            <div className={styles.loginRequired}>로그인 후 이용해 주세요.</div>
+          )}
         </aside>
         <aside className={styles.memoContainer}>
           <div className={styles.memoHeader}>
@@ -568,7 +572,6 @@ export default function Scene() {
               onClick={handleGetMemos}>
               메모장
             </p>
-
             <p
               className={`${styles.tab} ${
                 active === "all" ? styles.tabActive : styles.tabInactive
@@ -578,24 +581,30 @@ export default function Scene() {
             </p>
           </div>
           <div className={styles.textSection}>
-            {active === "memo" ? (
-              <div className={styles.textAreaContainer}>
-                <textarea
-                  id="textArea"
-                  placeholder="학습내용이나 아이디어를 남겨보세요"
-                  className={styles.textArea}
-                  value={textValue}
-                  onChange={handleChangeValue}
-                />
-                <div className={styles.buttonContainer}>
-                  <button className={styles.cancel}>취소</button>
-                  <button className={styles.okay} onClick={handleSaveMemo}>
-                    확인
-                  </button>
+            {user?.userId ? (
+              active === "memo" ? (
+                <div className={styles.textAreaContainer}>
+                  <textarea
+                    id="textArea"
+                    placeholder="학습내용이나 아이디어를 남겨보세요"
+                    className={styles.textArea}
+                    value={textValue}
+                    onChange={handleChangeValue}
+                  />
+                  <div className={styles.buttonContainer}>
+                    <button className={styles.cancel}>취소</button>
+                    <button className={styles.okay} onClick={handleSaveMemo}>
+                      확인
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <Memo />
+              )
             ) : (
-              <Memo />
+              <div className={styles.loginRequired}>
+                로그인 후 이용해 주세요.
+              </div>
             )}
           </div>
         </aside>
