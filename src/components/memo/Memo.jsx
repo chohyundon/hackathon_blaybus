@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useMemoStore } from "../../store/useMemoStore";
 import { useAuthStore } from "../../store/useAuthStore";
 import { apiUrl } from "../../api/config";
@@ -8,8 +8,23 @@ import etc_Icon from "../../assets/etc.svg";
 export default function Memo() {
   const [showModal, setShowModal] = useState(false);
   const [selectedMemo, setSelectedMemo] = useState(null);
+  const modalContentRef = useRef(null);
   const memoStore = useMemoStore((state) => state.memos);
   const setMemos = useMemoStore((state) => state.setMemos);
+  const user = useAuthStore((state) => state.user);
+  const userId = user?.userId;
+
+  // 모달 바깥 클릭 시 닫기 (모달이 카드 안에 있어서 document 리스너로 처리)
+  useEffect(() => {
+    if (!showModal) return;
+    const handleClickOutside = (e) => {
+      if (modalContentRef.current?.contains(e.target)) return;
+      setShowModal(false);
+      setSelectedMemo(null);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showModal]);
 
   const formatted = (date) => {
     if (!date) return "";
@@ -31,10 +46,13 @@ export default function Memo() {
   const handleDeleteMemo = async () => {
     if (!selectedMemo?.id) return;
     try {
-      const res = await fetch(apiUrl(`/memonote/${selectedMemo.id}`), {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const res = await fetch(
+        apiUrl(`/memonote/${selectedMemo.id}?userId=${userId}`),
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
       if (!res.ok) return;
       setMemos(memoStore.filter((m) => m.id !== selectedMemo.id));
       handleCloseModal();
@@ -66,12 +84,9 @@ export default function Memo() {
             {showModal && isSelected(memo) && (
               <div
                 className={styles.modal}
-                onClick={handleCloseModal}
                 role="presentation"
                 aria-hidden="true">
-                <div
-                  className={styles.modalContent}
-                  onClick={(e) => e.stopPropagation()}>
+                <div ref={modalContentRef} className={styles.modalContent}>
                   <p className={styles.modalItem}>수정</p>
                   <p className={styles.modalItem} onClick={handleDeleteMemo}>
                     삭제
