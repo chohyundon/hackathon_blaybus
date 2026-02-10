@@ -20,10 +20,12 @@ import {
   suspensionImages,
   v4Images,
 } from "../mock/slides";
+import LoginModal from "../modal/LoginModal";
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
   const mainFeatures = [
     {
       image: MainImage1,
@@ -55,6 +57,10 @@ AI를 통해 궁금한 내용을 질문해보세요`,
     componentImagesBySlide[slides[activeIndex].name] ?? []
   ).slice(0, 6);
 
+  const handleLogin = () => {
+    setShow(true);
+  };
+
   return (
     <main className={styles.homeContainer}>
       <div className={styles.homeContent}>
@@ -62,8 +68,11 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           <img src={logo} alt="Logo" />
           <h1 className={styles.homeTitle}>SIMVEX</h1>
           <p className={styles.homeDescription}>학습 리스트</p>
-          <button className={styles.homeButton}>로그인</button>
+          <button className={styles.homeButton} onClick={handleLogin}>
+            로그인
+          </button>
         </header>
+        {show && <LoginModal setShow={setShow} show={show} />}
         <section className={styles.homeSection}>
           <h2 className={styles.homeSectionTitle}>
             {slides[activeIndex].name}
