@@ -251,16 +251,32 @@ export default function Scene() {
 
   const handleGetAllMemos = async () => {
     setActive("all");
+    if (!user?.userId) return;
     const memos = await fetch(apiUrl(`/memonote/${user.userId}`), {
       credentials: "include",
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
-
+    if (memos.status === 401) {
+      setUser(null);
+      return;
+    }
+    const contentType = memos.headers.get("content-type");
+    if (!memos.ok || !contentType?.includes("application/json")) return;
     const memoData = await memos.json();
-    setMemos(memoData);
-    console.log(memoData);
+    const list = Array.isArray(memoData)
+      ? memoData
+      : memoData?.data ?? memoData?.memos ?? [];
+    setMemos(
+      list.map((m) => ({
+        object: m.object ?? m.title ?? "",
+        text: m.text ?? m.body ?? "",
+        date: m.date ?? m.createdAt ?? "",
+      }))
+    );
   };
+
+  console.log(memoStore);
 
   const handleSubmitAi = async (e) => {
     e.preventDefault();
