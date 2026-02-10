@@ -174,11 +174,9 @@ export default function Scene() {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
-    const contentType = memos.headers.get("content-type");
-    if (memos.ok && contentType?.includes("application/json")) {
-      const memoData = await memos.json();
-      console.log(memoData);
-    }
+
+    const memoData = await memos.json();
+    console.log(memoData);
   };
 
   const handleSubmitAi = async (e) => {
@@ -192,6 +190,8 @@ export default function Scene() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bodyData),
       });
+
+      console.log(res);
       const contentType = res.headers.get("content-type");
       if (res.ok && contentType?.includes("application/json")) {
         const aiData = await res.json();

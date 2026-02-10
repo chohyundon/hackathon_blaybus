@@ -120,7 +120,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
             <p
               className={
                 styles.homeUserName
-              }>{`${user.username}님 환영합니다.`}</p>
+              }>{`${user.nickname}님 환영합니다.`}</p>
           ) : (
             <button className={styles.homeButton} onClick={handleLogin}>
               로그인
