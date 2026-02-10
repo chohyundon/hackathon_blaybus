@@ -82,3 +82,9 @@
 .scrollX::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.5);
 }
+
+.memoSecondTitleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
