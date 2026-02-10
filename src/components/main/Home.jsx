@@ -27,7 +27,7 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const setUser = useAuthStore((state) => state.setUser);
+  const { setUser, setIsLoggedIn } = useAuthStore();
 
   const mainFeatures = [
     {
@@ -66,22 +66,41 @@ AI를 통해 궁금한 내용을 질문해보세요`,
 
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await fetch("https://be-dosa.store/auth/token", {
-        credentials: "include",
-        method: "POST",
-      });
-      const data = await user.json();
-      // data.name을 사용자 이름으로 설정
-      if (data?.accessToken) {
-        const user = await fetch("https://be-dosa.store/users/me", {
+      try {
+        const tokenRes = await fetch("https://be-dosa.store/auth/token", {
           credentials: "include",
-          method: "GET",
+          method: "POST",
         });
-        const userData = await user.json();
-        //시도
-        console.log(userData);
-        setUser(userData);
-      } else {
+        const contentType = tokenRes.headers.get("content-type");
+        if (!tokenRes.ok || !contentType?.includes("application/json")) {
+          setUser(null);
+          setIsLoggedIn(false);
+          return;
+        }
+        const data = await tokenRes.json();
+        if (data?.accessToken) {
+          const meRes = await fetch("https://be-dosa.store/users/me", {
+            credentials: "include",
+            method: "GET",
+          });
+          if (
+            !meRes.ok ||
+            !meRes.headers.get("content-type")?.includes("application/json")
+          ) {
+            setUser(null);
+            setIsLoggedIn(false);
+            return;
+          }
+          const userData = await meRes.json();
+          setUser(userData);
+          setIsLoggedIn(true);
+        } else {
+          setUser(null);
+          setIsLoggedIn(false);
+        }
+      } catch (e) {
+        console.warn("fetchUser failed", e);
+        setUser(null);
         setIsLoggedIn(false);
       }
     };
