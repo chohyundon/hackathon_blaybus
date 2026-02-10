@@ -214,25 +214,7 @@ export default function Scene() {
     setAiValue(e.target.value);
   };
 
-  const handleSaveMemo = () => {
-    setMemos([
-      ...memoStore,
-      {
-        text: textValue,
-        object: selectedObject,
-        date: new Date().toLocaleDateString(),
-      },
-    ]);
-    setTextValue("");
-  };
-
-  const handleZoomIn = () => {
-    console.log("zoom in");
-    setZoomIn((prev) => !prev);
-  };
-
-  const handleGetMemos = async () => {
-    setActive("memo");
+  const handleSaveMemo = async () => {
     if (!user?.userId) return;
     const bodyData = {
       userId: user.userId,
@@ -245,6 +227,16 @@ export default function Scene() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(bodyData),
     });
+    setTextValue("");
+  };
+
+  const handleZoomIn = () => {
+    console.log("zoom in");
+    setZoomIn((prev) => !prev);
+  };
+
+  const handleGetMemos = async () => {
+    setActive("memo");
   };
 
   const handleGetAllMemos = async () => {
