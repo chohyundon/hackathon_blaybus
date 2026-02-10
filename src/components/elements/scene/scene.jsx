@@ -194,13 +194,13 @@ export default function Scene() {
         body: JSON.stringify(bodyData),
       });
 
-      console.log(res);
-      const contentType = res.headers.get("content-type");
-      if (res.ok && contentType?.includes("application/json")) {
-        const aiData = await res.json();
+      if (res.ok) {
+        setSendAi(true);
+        const getAiData = await fetch(apiUrl(`/conversations`));
+        const aiData = await getAiData.json();
         console.log(aiData);
+        setAiValue("");
       }
-      setSendAi(true);
     } catch (err) {
       console.warn("handleSubmitAi failed", err);
     }
