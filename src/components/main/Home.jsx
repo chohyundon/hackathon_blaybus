@@ -68,6 +68,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
         method: "POST",
       });
       const data = await user.json();
+      // data.name을 사용자 이름으로 설정
       console.log(data);
     };
     fetchUser();
