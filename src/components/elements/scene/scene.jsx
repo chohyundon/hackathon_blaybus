@@ -206,6 +206,12 @@ export default function Scene() {
     }
   };
 
+  const aiText =
+    JSON.parse(aiData.find((item) => item.prompt === aiValue)?.response || "{}")
+      .message || "";
+
+  console.log(aiText);
+
   return (
     <main className={styles.mainContainer}>
       <Header
@@ -404,9 +410,7 @@ export default function Scene() {
 
             {/* AI 메시지 */}
             <div className={`${styles.message} ${styles.aiText}`}>
-              ~~대한민국의 경제질서는 개인과 기업의 경제상의 자유와 창의를
-              존중함을 기본으로 한다. 모든 국민은 헌법과 법률이 정한 법관에
-              의하여 법률에 의한 재판을 받을 권리를 가진다.
+              {sendAi && aiText}
             </div>
           </div>
           <form onSubmit={handleSubmitAi}>
