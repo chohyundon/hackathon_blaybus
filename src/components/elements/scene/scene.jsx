@@ -39,10 +39,38 @@ function CameraByObject({ selectedObject }) {
   return null;
 }
 
+const SCENE_VIEW_KEY = "sceneViewState";
+
+function loadSceneView() {
+  try {
+    const s = localStorage.getItem(SCENE_VIEW_KEY);
+    if (!s) return null;
+    const o = JSON.parse(s);
+    return {
+      selectedObject:
+        typeof o.selectedObject === "string" ? o.selectedObject : null,
+      disassemble:
+        typeof o.disassemble === "number" &&
+        o.disassemble >= 0 &&
+        o.disassemble <= 1
+          ? o.disassemble
+          : null,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export default function Scene() {
   const [selectedPart, setSelectedPart] = useState(null);
-  const [disassemble, setDisassemble] = useState(0); // 0 = 합체, 1 = 분해
-  const [selectedObject, setSelectedObject] = useState("V4_Engine");
+  const [disassemble, setDisassemble] = useState(() => {
+    const saved = loadSceneView();
+    return saved?.disassemble ?? 0;
+  }); // 0 = 합체, 1 = 분해
+  const [selectedObject, setSelectedObject] = useState(() => {
+    const saved = loadSceneView();
+    return saved?.selectedObject ?? "V4_Engine";
+  });
   const [active, setActive] = useState("memo");
   const [textValue, setTextValue] = useState("");
   const [aiValue, setAiValue] = useState("");
@@ -112,6 +140,18 @@ export default function Scene() {
     });
     return out;
   };
+
+  // 오브젝트/분해 상태 저장 → 새로고침·재진입 시 복원
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        SCENE_VIEW_KEY,
+        JSON.stringify({ selectedObject, disassemble })
+      );
+    } catch (e) {
+      console.warn("save scene view failed", e);
+    }
+  }, [selectedObject, disassemble]);
 
   // 채팅이 추가될 때 항상 맨 아래로 스크롤
   useEffect(() => {
