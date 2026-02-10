@@ -43,6 +43,10 @@ export default function Memo() {
     }
   };
 
+  const isSelected = (memo) =>
+    selectedMemo &&
+    (memo.id != null ? memo.id === selectedMemo.id : memo === selectedMemo);
+
   return (
     <div className={styles.scrollX}>
       <div className={styles.memoBox}>
@@ -59,25 +63,25 @@ export default function Memo() {
             </div>
             <p className={styles.memoContent}>{memo.text}</p>
             <p className={styles.day}>{formatted(memo.date)}</p>
+            {showModal && isSelected(memo) && (
+              <div
+                className={styles.modal}
+                onClick={handleCloseModal}
+                role="presentation"
+                aria-hidden="true">
+                <div
+                  className={styles.modalContent}
+                  onClick={(e) => e.stopPropagation()}>
+                  <p className={styles.modalItem}>수정</p>
+                  <p className={styles.modalItem} onClick={handleDeleteMemo}>
+                    삭제
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
-      {showModal && (
-        <div
-          className={styles.modal}
-          onClick={handleCloseModal}
-          role="presentation"
-          aria-hidden="true">
-          <div
-            className={styles.modalContent}
-            onClick={(e) => e.stopPropagation()}>
-            <p className={styles.modalItem}>수정</p>
-            <p className={styles.modalItem} onClick={handleDeleteMemo}>
-              삭제
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
