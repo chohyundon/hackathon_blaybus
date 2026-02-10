@@ -14,6 +14,7 @@ import { useMemoStore } from "../../../store/useMemoStore";
 import Memo from "../../memo/Memo";
 import ZoomInIcon from "../../../assets/ZoomButton.svg";
 import Zoom from "../../../zoom/Zoom";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 /** 탭 전환 시 카메라 위치·FOV 갱신 (Canvas의 camera prop은 최초 1회만 적용됨) */
 function CameraByObject({ selectedObject }) {
