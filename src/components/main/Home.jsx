@@ -21,11 +21,14 @@ import {
   v4Images,
 } from "../mock/slides";
 import LoginModal from "../modal/LoginModal";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
+  const { isLoggedIn, user, logout } = useAuthStore();
+  console.log(user);
   const mainFeatures = [
     {
       image: MainImage1,
@@ -61,18 +64,6 @@ AI를 통해 궁금한 내용을 질문해보세요`,
     setShow(true);
   };
 
-  //테스트
-  useEffect(() => {
-    const checkAuth = async () => {
-      const response = await fetch("https://be-dosa.store/auth/token", {
-        credentials: "include",
-        method: "POST",
-      });
-      console.log(response);
-    };
-    checkAuth();
-  }, []);
-
   return (
     <main className={styles.homeContainer}>
       <div className={styles.homeContent}>
@@ -80,9 +71,18 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           <img src={logo} alt="Logo" />
           <h1 className={styles.homeTitle}>SIMVEX</h1>
           <p className={styles.homeDescription}>학습 리스트</p>
-          <button className={styles.homeButton} onClick={handleLogin}>
-            로그인
-          </button>
+          {isLoggedIn ? (
+            <div className={styles.homeUserRow}>
+              <span className={styles.homeUserName}>{user}</span>
+              <button className={styles.homeButton} onClick={logout}>
+                로그아웃
+              </button>
+            </div>
+          ) : (
+            <button className={styles.homeButton} onClick={handleLogin}>
+              로그인
+            </button>
+          )}
         </header>
         {show && <LoginModal setShow={setShow} show={show} />}
         <section className={styles.homeSection}>
