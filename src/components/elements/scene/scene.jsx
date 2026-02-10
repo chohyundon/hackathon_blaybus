@@ -58,6 +58,7 @@ export default function Scene() {
   const [zoomIn, setZoomIn] = useState(false);
   const [controlsActive, setControlsActive] = useState(false);
   const controlsEndTimeoutRef = useRef(null);
+  const [aiData, setAiData] = useState([]);
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
 
@@ -198,7 +199,7 @@ export default function Scene() {
         setSendAi(true);
         const getAiData = await fetch(apiUrl(`/conversations`));
         const aiData = await getAiData.json();
-        console.log(aiData);
+        setAiData(aiData);
         setAiValue("");
       }
     } catch (err) {
