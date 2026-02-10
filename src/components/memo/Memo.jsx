@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMemoStore } from "../../store/useMemoStore";
 import styles from "./memo.module.css";
 import etc_Icon from "../../assets/etc_Icon.svg";
@@ -33,8 +34,14 @@ export default function Memo() {
         ))}
       </div>
       {showModal && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
+        <div
+          className={styles.modal}
+          onClick={() => setShowModal(false)}
+          role="presentation"
+          aria-hidden="true">
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}>
             <p className={styles.modalItem}>수정</p>
             <p className={styles.modalItem}>삭제</p>
           </div>
