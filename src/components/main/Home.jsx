@@ -75,7 +75,6 @@ AI를 통해 궁금한 내용을 질문해보세요`,
         const contentType = tokenRes.headers.get("content-type");
         if (!tokenRes.ok || !contentType?.includes("application/json")) {
           setUser(null);
-          setIsLoggedIn(false);
           return;
         }
         const data = await tokenRes.json();

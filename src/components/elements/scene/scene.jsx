@@ -58,8 +58,50 @@ export default function Scene() {
   const [controlsActive, setControlsActive] = useState(false);
   const controlsEndTimeoutRef = useRef(null);
   const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
 
-  console.log(active);
+  // Scene에서도 사용자 정보 로드 (직접 /scene 진입 시 스토어에 user가 없을 수 있음)
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const tokenRes = await fetch("https://be-dosa.store/auth/token", {
+          credentials: "include",
+          method: "POST",
+        });
+        const contentType = tokenRes.headers.get("content-type");
+        if (!tokenRes.ok || !contentType?.includes("application/json")) {
+          setUser(null);
+          return;
+        }
+        const data = await tokenRes.json();
+        if (data?.accessToken) {
+          const meRes = await fetch("https://be-dosa.store/users/me", {
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${data.accessToken}`,
+            },
+            method: "GET",
+          });
+          if (
+            !meRes.ok ||
+            !meRes.headers.get("content-type")?.includes("application/json")
+          ) {
+            setUser(null);
+            return;
+          }
+          const userData = await meRes.json();
+          setUser(userData);
+        } else {
+          setUser(null);
+        }
+      } catch (e) {
+        console.warn("fetchUser failed", e);
+        setUser(null);
+      }
+    };
+    fetchUser();
+  }, [setUser]);
 
   useEffect(() => {
     if (!rangeRef.current) return;
