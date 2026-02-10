@@ -110,6 +110,15 @@ AI를 통해 궁금한 내용을 질문해보세요`,
 
   console.log(user);
 
+  const handleLogout = () => {
+    if (user?.email.includes("gmail.com")) {
+      window.location.href = "https://be-paper-dot.store/auth/withdraw/google";
+    } else {
+      window.location.href = "https://be-paper-dot.store/auth/withdraw/kakao";
+    }
+    setUser(null);
+  };
+
   return (
     <main className={styles.homeContainer}>
       <div className={styles.homeContent}>
@@ -118,10 +127,15 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           <h1 className={styles.homeTitle}>SIMVEX</h1>
           <p className={styles.homeDescription}>학습 리스트</p>
           {user ? (
-            <p
-              className={
-                styles.homeUserName
-              }>{`${user.nickname}님 환영합니다.`}</p>
+            <div className={styles.homeUserRow}>
+              <p
+                className={
+                  styles.homeUserName
+                }>{`${user.nickname}님 환영합니다.`}</p>
+              <button className={styles.homeButton} onClick={handleLogout}>
+                로그아웃
+              </button>
+            </div>
           ) : (
             <button className={styles.homeButton} onClick={handleLogin}>
               로그인

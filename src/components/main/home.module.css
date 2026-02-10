@@ -42,8 +42,6 @@
   color: #fff;
   font-size: 14px;
   font-weight: 500;
-  position: absolute;
-  right: 40px;
 }
 
 .homeButton {
@@ -413,4 +411,12 @@
   line-height: 150%;
   letter-spacing: -0.6px;
   white-space: pre-line;
+}
+
+.homeUserRow {
+  position: absolute;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
