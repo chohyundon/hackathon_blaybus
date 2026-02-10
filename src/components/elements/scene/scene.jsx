@@ -205,7 +205,6 @@ export default function Scene() {
 
   const handleGetAllMemos = async () => {
     setActive("all");
-    if (!user?.userId) return;
     const memos = await fetch(apiUrl(`/memonote/${user.userId}`), {
       credentials: "include",
       method: "GET",
@@ -213,6 +212,7 @@ export default function Scene() {
     });
 
     const memoData = await memos.json();
+    setMemos(memoData);
     console.log(memoData);
   };
 
@@ -255,6 +255,8 @@ export default function Scene() {
       console.warn("handleSubmitAi failed", err);
     }
   };
+
+  console.log(memoStore);
 
   return (
     <main className={styles.mainContainer}>
