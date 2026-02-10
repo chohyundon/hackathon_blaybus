@@ -61,16 +61,6 @@ AI를 통해 궁금한 내용을 질문해보세요`,
     setShow(true);
   };
 
-  useEffect(() => {
-    const checkLogin = async () => {
-      const response = await fetch("https://be-dosa.store/api/auth/token", {
-        credentials: "include",
-      });
-      console.log(response);
-    };
-    checkLogin();
-  }, []);
-
   return (
     <main className={styles.homeContainer}>
       <div className={styles.homeContent}>

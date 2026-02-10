@@ -9,9 +9,18 @@ export default function LoginModal({ setShow, show }) {
     if (e.target === e.currentTarget) setShow(false);
   };
 
-  const onKakaoLogin = () => {
+  const onKakaoLogin = async () => {
     const url = `https://be-dosa.store/oauth2/authorization/kakao`;
     window.location.href = url;
+
+    const response = await fetch("https://be-dosa.store/auth/token", {
+      credentials: "include",
+    });
+    console.log(response);
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+    }
   };
 
   const onGoogleLogin = () => {
