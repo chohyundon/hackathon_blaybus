@@ -330,13 +330,13 @@
 
 .homeMiddleSectionFeaturesListItem {
   display: flex;
-  gap: 20px;
+  box-sizing: border-box;
 }
 
 .homeMiddleSectionFeaturesListImage {
   display: flex;
-  width: 100%;
-  object-fit: cover;
+  width: 290px;
+  height: 290px;
   background-color: #242528;
   border-radius: 20px;
 }

@@ -78,6 +78,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           return;
         }
         const data = await tokenRes.json();
+        console.log(data);
         if (data?.accessToken) {
           const meRes = await fetch("https://be-dosa.store/users/me", {
             credentials: "include",
@@ -204,31 +205,17 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           </div>
         </div>
         <div className={styles.homeMiddleSectionFeaturesList}>
-          <Swiper
-            className={styles.homeMiddleSectionFeaturesListSwiper}
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
-            spaceBetween={24}
-            slidesPerView="auto"
-            centeredSlides={true}
-            pagination={{ clickable: true }}
-            loop={true}>
-            {slides.map((slide, index) => (
-              <SwiperSlide
-                key={index}
-                className={styles.homeMiddleSectionFeaturesListSlide}>
-                <div className={styles.homeMiddleSectionFeaturesListItem}>
-                  <img
-                    src={slide.image}
-                    alt={slide.name}
-                    className={styles.homeMiddleSectionFeaturesListImage}
-                  />
-                  <p className={styles.homeMiddleSectionFeaturesListSlideTitle}>
-                    {slide.name}
-                  </p>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          {slides.map((slide, index) => (
+            <div
+              className={styles.homeMiddleSectionFeaturesListItem}
+              key={index}>
+              <img
+                src={slide.image}
+                alt={slide.name}
+                className={styles.homeMiddleSectionFeaturesListImage}
+              />
+            </div>
+          ))}
         </div>
         <div className={styles.homeMiddleSectionFeaturesListTitle}>
           <h1 className={styles.homeMiddleSectionFeaturesListTitleText}>
