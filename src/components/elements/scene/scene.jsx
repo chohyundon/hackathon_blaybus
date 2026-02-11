@@ -336,6 +336,8 @@ export default function Scene() {
         body: JSON.stringify(bodyData),
       });
 
+      console.log("res", res);
+
       if (!res.ok) throw new Error("chat request failed");
 
       const getAiData = await fetch(
