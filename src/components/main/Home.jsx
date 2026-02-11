@@ -69,8 +69,6 @@ AI를 통해 궁금한 내용을 질문해보세요`,
     setShow(true);
   };
 
-  console.log(user.email);
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
