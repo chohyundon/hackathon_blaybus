@@ -1,6 +1,6 @@
 import styles from "./home.module.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import MainImage1 from "../../assets/left.svg";
@@ -30,6 +30,9 @@ export default function Home() {
   const [show, setShow] = useState(false);
   const setUser = useAuthStore((state) => state.setUser);
   const user = useAuthStore((state) => state.user);
+  const [featuresSwiper, setFeaturesSwiper] = useState(null);
+  const featuresSwiperPrevRef = useRef(null);
+  const featuresSwiperNextRef = useRef(null);
 
   const mainFeatures = [
     {
@@ -65,6 +68,8 @@ AI를 통해 궁금한 내용을 질문해보세요`,
   const handleLogin = () => {
     setShow(true);
   };
+
+  console.log(user.email);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -110,6 +115,20 @@ AI를 통해 궁금한 내용을 질문해보세요`,
 
   console.log(user);
 
+  const handleLogout = async () => {
+    const provider = user?.email?.includes("gmail.com") ? "google" : "kakao";
+    try {
+      await fetch(apiUrl(`/auth/withdraw/${provider}`), {
+        credentials: "include",
+        method: "DELETE",
+      });
+      setUser(null);
+    } catch (e) {
+      console.warn("logout failed", e);
+      setUser(null);
+    }
+  };
+
   return (
     <main className={styles.homeContainer}>
       <div className={styles.homeContent}>
@@ -118,10 +137,15 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           <h1 className={styles.homeTitle}>SIMVEX</h1>
           <p className={styles.homeDescription}>학습 리스트</p>
           {user ? (
-            <p
-              className={
-                styles.homeUserName
-              }>{`${user.nickname}님 환영합니다.`}</p>
+            <div>
+              <p
+                className={
+                  styles.homeUserName
+                }>{`${user.nickname}님 환영합니다.`}</p>
+              <button className={styles.homeButton} onClick={handleLogout}>
+                로그아웃
+              </button>
+            </div>
           ) : (
             <button className={styles.homeButton} onClick={handleLogin}>
               로그인
@@ -156,7 +180,9 @@ AI를 통해 궁금한 내용을 질문해보세요`,
             ))}
           </Swiper>
           <div className={styles.homeSectionDescription}>
-            <p>{slides[activeIndex].description}</p>
+            <p className={styles.homeSectionDescriptionText}>
+              {slides[activeIndex].description}
+            </p>
             <button
               className={styles.homeSectionButton}
               onClick={() => {
@@ -167,7 +193,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           </div>
           <div className={styles.homeSectionComponents}>
             <h3 className={styles.homeSectionComponentsTitle}>구성 부품</h3>
-            <div className={styles.homeSectionComponentsList}>
+            <div className={styles.homeSectionComponentsItemContainer}>
               <div className={styles.homeSectionComponentsItem}>
                 {currentComponentImages.map((image, index) => (
                   <img
@@ -207,27 +233,58 @@ AI를 통해 궁금한 내용을 질문해보세요`,
               # AI 실시간 학습/연구 보조
             </p>
             <div className={styles.homeMiddleSectionFeaturesButton}>
-              <p className={styles.homeMiddleSectionFeaturesButtonItemLeft}>
+              <button
+                ref={featuresSwiperPrevRef}
+                type="button"
+                className={styles.homeMiddleSectionFeaturesButtonItemLeft}
+                aria-label="이전 슬라이드"
+                onClick={() => featuresSwiper?.slidePrev()}>
                 {"<"}
-              </p>
-              <p className={styles.homeMiddleSectionFeaturesButtonItemRight}>
+              </button>
+              <button
+                ref={featuresSwiperNextRef}
+                type="button"
+                className={styles.homeMiddleSectionFeaturesButtonItemRight}
+                aria-label="다음 슬라이드"
+                onClick={() => featuresSwiper?.slideNext()}>
                 {">"}
-              </p>
+              </button>
             </div>
           </div>
         </div>
         <div className={styles.homeMiddleSectionFeaturesList}>
-          {slides.map((slide, index) => (
-            <div
-              className={styles.homeMiddleSectionFeaturesListItem}
-              key={index}>
-              <img
-                src={slide.image}
-                alt={slide.name}
-                className={styles.homeMiddleSectionFeaturesListImage}
-              />
-            </div>
-          ))}
+          <Swiper
+            className={styles.homeMiddleSectionFeaturesListSwiper}
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            spaceBetween={32}
+            slidesPerView={3.2}
+            pagination={{ clickable: true }}
+            loop={true}
+            navigation={true}
+            onSwiper={setFeaturesSwiper}
+            onBeforeInit={(swiper) => {
+              swiper.params.navigation.prevEl = featuresSwiperPrevRef.current;
+              swiper.params.navigation.nextEl = featuresSwiperNextRef.current;
+            }}
+            onInit={(swiper) => {
+              swiper.navigation.init();
+              swiper.navigation.update();
+            }}>
+            {slides.map((slide, index) => (
+              <SwiperSlide key={index}>
+                <div className={styles.homeMiddleSectionFeaturesListItem}>
+                  <img
+                    src={slide.image}
+                    alt={slide.name}
+                    className={styles.homeMiddleSectionFeaturesListImage}
+                  />
+                  <p className={styles.homeMiddleSectionFeaturesListImageText}>
+                    {slide.name}
+                  </p>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
         <div className={styles.homeMiddleSectionFeaturesListTitle}>
           <h1 className={styles.homeMiddleSectionFeaturesListTitleText}>
