@@ -367,6 +367,7 @@ export default function Scene() {
         setShowService={setShowService}
         selectedObject={selectedObject}
         setSelectedObject={setSelectedObject}
+        accessToken={accessToken}
       />
       <div className={styles.sceneContainer}>
         {zoomIn ? (

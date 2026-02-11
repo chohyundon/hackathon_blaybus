@@ -10,6 +10,7 @@ export default function Header({
   selectedObject,
   setSelectedObject,
   handleLogin,
+  accessToken,
 }) {
   const object = ["V4_Engine", "Robot Arm", "Drone", "Suspension"];
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function Header({
         credentials: "include",
         method: "POST",
         headers: {
-          Authorization: `Bearer ${user.accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
     } catch (e) {
