@@ -43,8 +43,6 @@
   color: #fff;
   font-size: 14px;
   font-weight: 500;
-  position: absolute;
-  right: 3%;
 }
 
 .homeButton {
@@ -59,7 +57,6 @@
   font-weight: 500;
   line-height: 150%;
   letter-spacing: -0.4px;
-  padding: 0.5% 2.5%;
   cursor: pointer;
   &:hover {
     opacity: 0.7;
