@@ -93,6 +93,8 @@ export default function Scene() {
   ``;
   const [accessToken, setAccessToken] = useState(null);
 
+  console.log("user", user);
+
   const parseJsonSafely = (value) => {
     if (typeof value !== "string") return null;
     try {
