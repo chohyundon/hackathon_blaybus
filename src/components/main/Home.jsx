@@ -116,17 +116,17 @@ AI를 통해 궁금한 내용을 질문해보세요`,
   console.log(user);
 
   const handleLogout = async () => {
-    const provider = user?.email?.includes("gmail.com") ? "google" : "kakao";
-    try {
-      await fetch(apiUrl(`/auth/withdraw/${provider}`), {
-        credentials: "include",
-        method: "DELETE",
-      });
-      setUser(null);
-    } catch (e) {
-      console.warn("logout failed", e);
-      setUser(null);
-    }
+    // const provider = user?.email?.includes("gmail.com") ? "google" : "kakao";
+    // try {
+    //   await fetch(apiUrl(`/auth/withdraw/${provider}`), {
+    //     credentials: "include",
+    //     method: "DELETE",
+    //   });
+    //   setUser(null);
+    // } catch (e) {
+    //   console.warn("logout failed", e);
+    //   setUser(null);
+    // }
   };
 
   return (
