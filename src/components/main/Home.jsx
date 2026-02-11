@@ -96,17 +96,13 @@ AI를 통해 궁금한 내용을 질문해보세요`,
             !meRes.ok ||
             !meRes.headers.get("content-type")?.includes("application/json")
           ) {
-            setUser(null);
             return;
           }
           const userData = await meRes.json();
           setUser(userData);
-        } else {
-          setUser(null);
         }
       } catch (e) {
         console.warn("fetchUser failed", e);
-        setUser(null);
       }
     };
     fetchUser();
@@ -123,10 +119,8 @@ AI를 통해 궁금한 내용을 질문해보세요`,
         },
       });
       console.log("res", res);
-      setUser(null);
     } catch (e) {
       console.warn("logout failed", e);
-      setUser(null);
     }
   };
 

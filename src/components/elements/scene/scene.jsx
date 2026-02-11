@@ -191,7 +191,6 @@ export default function Scene() {
         });
         const contentType = tokenRes.headers.get("content-type");
         if (!tokenRes.ok || !contentType?.includes("application/json")) {
-          setUser(null);
           return;
         }
         const data = await tokenRes.json();
@@ -208,17 +207,14 @@ export default function Scene() {
             !meRes.ok ||
             !meRes.headers.get("content-type")?.includes("application/json")
           ) {
-            setUser(null);
             return;
           }
           const userData = await meRes.json();
           setUser(userData);
         } else {
-          setUser(null);
         }
       } catch (e) {
         console.warn("fetchUser failed", e);
-        setUser(null);
       }
     };
     fetchUser();
@@ -291,7 +287,6 @@ export default function Scene() {
       headers: { "Content-Type": "application/json" },
     });
     if (memos.status === 401) {
-      setUser(null);
       return;
     }
     const contentType = memos.headers.get("content-type");
