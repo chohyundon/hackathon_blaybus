@@ -16,8 +16,7 @@ export default function Header({
   const navigate = useNavigate();
   const pathname = useLocation();
   const user = useAuthStore((state) => state.user);
-
-  console.log("user", user);
+  const setUser = useAuthStore((state) => state.setUser);
 
   const handleLogout = async () => {
     try {
@@ -28,12 +27,12 @@ export default function Header({
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      setUser(null);
     } catch (e) {
       console.warn("logout failed", e);
+      setUser(null);
     }
   };
-
-  console.log(user);
 
   const onLoginClick = () => {
     if (handleLogin) handleLogin();

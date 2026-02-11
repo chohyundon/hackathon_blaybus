@@ -112,16 +112,19 @@ AI를 통해 궁금한 내용을 질문해보세요`,
 
   const handleLogout = async () => {
     try {
-      const res = await fetch(apiUrl(`/auth/logout`), {
+      await fetch(apiUrl(`/auth/logout`), {
         credentials: "include",
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log("res", res);
+      setUser(null);
+      setAccessToken(null);
     } catch (e) {
       console.warn("logout failed", e);
+      setUser(null);
+      setAccessToken(null);
     }
   };
 
