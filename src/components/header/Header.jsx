@@ -20,7 +20,7 @@ export default function Header({
     try {
       await fetch(apiUrl(`/auth/logout`), {
         credentials: "include",
-        method: "DELETE",
+        method: "POST",
         headers: {
           Authorization: `Bearer ${user.accessToken}`,
         },
