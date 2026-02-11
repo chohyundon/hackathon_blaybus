@@ -34,6 +34,8 @@ export default function Header({
     }
   };
 
+  console.log(user);
+
   const onLoginClick = () => {
     if (handleLogin) handleLogin();
     else navigate("/");

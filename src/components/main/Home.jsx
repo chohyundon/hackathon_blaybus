@@ -82,6 +82,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
           return;
         }
         const data = await tokenRes.json();
+        console.log(data);
         if (data?.accessToken) {
           const meRes = await fetch(apiUrl("/users/me"), {
             credentials: "include",
@@ -111,7 +112,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
     fetchUser();
   }, []);
 
-  console.log(user);
+  console.log(data);
 
   const handleLogout = async () => {
     const provider = user?.email !== null ? "google" : "kakao";
