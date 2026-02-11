@@ -15,22 +15,18 @@ export default function Header({
   const navigate = useNavigate();
   const pathname = useLocation();
   const user = useAuthStore((state) => state.user);
-  const setUser = useAuthStore((state) => state.setUser);
 
   const handleLogout = async () => {
-    const provider = user?.email !== null ? "google" : "kakao";
     try {
-      await fetch(apiUrl(`/auth/withdraw/${provider}`), {
+      await fetch(apiUrl(`/auth/logout`), {
         credentials: "include",
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${user.accessToken}`,
         },
       });
-      setUser(null);
     } catch (e) {
       console.warn("logout failed", e);
-      setUser(null);
     }
   };
 

@@ -109,11 +109,10 @@ AI를 통해 궁금한 내용을 질문해보세요`,
   }, []);
 
   const handleLogout = async () => {
-    const provider = user?.email !== null ? "google" : "kakao";
     try {
-      const res = await fetch(apiUrl(`/auth/withdraw/${provider}`), {
+      const res = await fetch(apiUrl(`/auth/logout`), {
         credentials: "include",
-        method: "DELETE",
+        method: "POST",
         headers: {
           Authorization: `Bearer ${data.accessToken}`,
         },
