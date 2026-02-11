@@ -84,9 +84,9 @@ export default function Header({
         <div className={styles.loginButton}>
           {user ? (
             <div className={styles.loginButtonContainer}>
-              <p className={styles.loginButtonText}>{user.nickname}님</p>
+              <p className={styles.loginText}>{user.nickname}님</p>
               <p
-                className={styles.loginText}
+                className={styles.loginButtonText}
                 onClick={handleLogout}
                 style={{ cursor: "pointer", marginLeft: 8 }}>
                 로그아웃

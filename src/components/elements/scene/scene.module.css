@@ -682,9 +682,6 @@
   font-weight: 500;
   line-height: 150%;
   letter-spacing: -0.4px;
-  &:hover {
-    opacity: 0.7;
-  }
 }
 
 .okay {
