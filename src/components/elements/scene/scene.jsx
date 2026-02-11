@@ -324,7 +324,7 @@ export default function Scene() {
     setAiValue("");
     const bodyData = { message: prompt };
     try {
-      const res = await fetch(apiUrl("/chat"), {
+      const res = await fetch(apiUrl(`/chat?userId=${user?.userId}`), {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -333,9 +333,12 @@ export default function Scene() {
 
       if (!res.ok) throw new Error("chat request failed");
 
-      const getAiData = await fetch(apiUrl("/conversations"), {
-        credentials: "include",
-      });
+      const getAiData = await fetch(
+        apiUrl(`/conversations?userId=${user?.userId}`),
+        {
+          credentials: "include",
+        }
+      );
       const data = await getAiData.json();
       const list = Array.isArray(data)
         ? data
