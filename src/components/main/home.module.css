@@ -490,7 +490,7 @@
   right: 5%;
   display: flex;
   align-items: center;
-  gap: 1.5%;
+  gap: 8px;
 }
 
 /* ========== 반응형: 태블릿 (1200px 이하) ========== */
