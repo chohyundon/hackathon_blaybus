@@ -37,14 +37,20 @@
   display: flex;
   position: absolute;
   top: 15px;
+  left: 0;
+  right: 0;
   height: 70px;
+  width: 100%;
+  max-width: 100%;
+  padding-inline: 24px;
+  box-sizing: border-box;
 }
 
 .titleContainer {
   display: flex;
   align-items: center;
   gap: 12px;
-  width: 100%;
+  min-width: 0;
 }
 
 .img {
@@ -520,6 +526,29 @@
   will-change: transform;
   animation: aiDotsBounce 0.9s infinite ease-in-out;
   animation-delay: 0.24s;
+}
+
+.loginButton {
+  position: absolute;
+  align-items: center;
+  right: 5%;
+  flex-shrink: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.loginButtonText {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 150%;
+  background-color: #236bf6;
+  border-radius: 1000px;
+  padding: 10px 20px;
+  letter-spacing: -0.4px;
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
 @keyframes aiDotsBounce {

@@ -119,6 +119,9 @@ AI를 통해 궁금한 내용을 질문해보세요`,
       await fetch(apiUrl(`/auth/withdraw/${provider}`), {
         credentials: "include",
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${data.accessToken}`,
+        },
       });
       setUser(null);
     } catch (e) {
@@ -140,7 +143,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
                 className={
                   styles.homeUserName
                 }>{`${user.nickname}님 환영합니다.`}</p>
-              <button className={styles.homeButton} onClick={handleLogout}>
+              <button className={styles.logoutButton} onClick={handleLogout}>
                 로그아웃
               </button>
             </div>
