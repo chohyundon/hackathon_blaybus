@@ -332,7 +332,7 @@ export default function Scene() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: bodyData,
+        body: JSON.stringify(bodyData),
       });
 
       console.log("res", res);
