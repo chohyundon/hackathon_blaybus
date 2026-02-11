@@ -115,13 +115,14 @@ AI를 통해 궁금한 내용을 질문해보세요`,
   const handleLogout = async () => {
     const provider = user?.email !== null ? "google" : "kakao";
     try {
-      await fetch(apiUrl(`/auth/withdraw/${provider}`), {
+      const res = await fetch(apiUrl(`/auth/withdraw/${provider}`), {
         credentials: "include",
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${data.accessToken}`,
         },
       });
+      console.log("res", res);
       setUser(null);
     } catch (e) {
       console.warn("logout failed", e);
