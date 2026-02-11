@@ -675,6 +675,18 @@
   }
 }
 
+.loginText {
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.4px;
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
 .okay {
   border-radius: 12px;
   background: #236bf6;
