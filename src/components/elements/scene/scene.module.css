@@ -639,6 +639,16 @@
   letter-spacing: -0.375px;
 }
 
+.loginButtonContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
 .buttonContainer {
   display: flex;
   justify-content: flex-end;
