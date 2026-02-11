@@ -124,6 +124,8 @@ export default function Scene() {
     return response;
   };
 
+  console.log("accessToken", accessToken);
+
   // API 대화 목록 [{ prompt, response, id, timestamp }, ...] → 채팅 메시지 배열로 변환 (prompt=유저, response=AI)
   const conversationsToChatMessages = (list) => {
     const arr = Array.isArray(list) ? list : [];
