@@ -116,7 +116,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
         credentials: "include",
         method: "POST",
         headers: {
-          Authorization: `Bearer ${data.accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       console.log("res", res);

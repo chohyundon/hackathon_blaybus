@@ -90,6 +90,8 @@ export default function Scene() {
   const chatBottomRef = useRef(null);
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
+  ``;
+  const [accessToken, setAccessToken] = useState(null);
 
   const parseJsonSafely = (value) => {
     if (typeof value !== "string") return null;
@@ -195,6 +197,7 @@ export default function Scene() {
         }
         const data = await tokenRes.json();
         if (data?.accessToken) {
+          setAccessToken(data.accessToken);
           const meRes = await fetch(apiUrl("/users/me"), {
             credentials: "include",
             headers: {

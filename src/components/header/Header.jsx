@@ -17,6 +17,8 @@ export default function Header({
   const pathname = useLocation();
   const user = useAuthStore((state) => state.user);
 
+  console.log("user", user);
+
   const handleLogout = async () => {
     try {
       await fetch(apiUrl(`/auth/logout`), {
