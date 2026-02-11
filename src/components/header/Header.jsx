@@ -5,6 +5,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { apiUrl } from "../../api/config";
 import LoginModal from "../modal/LoginModal";
 import { useState } from "react";
+import QuizModal from "../modal/QuizModal";
 
 export default function Header({
   showService,
@@ -19,6 +20,7 @@ export default function Header({
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
   const [show, setShow] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -40,9 +42,14 @@ export default function Header({
     setShow(true);
   };
 
+  const handleQuiz = () => {
+    setShowQuiz((prev) => !prev);
+  };
+
   return (
     <nav className={styles.content}>
       {show && <LoginModal setShow={setShow} show={show} />}
+      {showQuiz && <QuizModal showQuiz={showQuiz} setShowQuiz={setShowQuiz} />}
       <div className={styles.titleContainer}>
         <img src={logo} className={styles.img} />
         <p className={styles.title} onClick={() => navigate("/")}>
@@ -51,7 +58,9 @@ export default function Header({
         <div className={styles.descriptionSeparator}>|</div>
         <p
           className={
-            !showService ? styles.descriptionActive : styles.description
+            !showService && !showQuiz
+              ? styles.descriptionActive
+              : styles.description
           }
           onClick={() => {
             setShowService(false);
@@ -61,13 +70,24 @@ export default function Header({
         </p>
         <p
           className={
-            showService ? styles.descriptionActive : styles.description
+            showService && !showQuiz
+              ? styles.descriptionActive
+              : styles.description
           }
           onClick={() => {
             setShowService(true);
             navigate("/learn-list");
           }}>
           학습 리스트
+        </p>
+        <p
+          className={
+            showQuiz && showService
+              ? styles.descriptionActive
+              : styles.description
+          }
+          onClick={handleQuiz}>
+          퀴즈
         </p>
         {pathname.pathname === "/scene" && (
           <div className={styles.option}>

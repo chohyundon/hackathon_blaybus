@@ -134,7 +134,6 @@ AI를 통해 궁금한 내용을 질문해보세요`,
         <header className={styles.homeHeader}>
           <img src={logo} alt="Logo" />
           <h1 className={styles.homeTitle}>SIMVEX</h1>
-          <p className={styles.homeDescription}>학습 리스트</p>
           {user ? (
             <div className={styles.homeUserRow}>
               <p
@@ -271,7 +270,18 @@ AI를 통해 궁금한 내용을 질문해보세요`,
             }}>
             {slides.map((slide, index) => (
               <SwiperSlide key={index}>
-                <div className={styles.homeMiddleSectionFeaturesListItem}>
+                <div
+                  className={styles.homeMiddleSectionFeaturesListItem}
+                  onClick={() => featuresSwiper?.slideNext()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      featuresSwiper?.slideNext();
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${slide.name} 보기, 클릭 시 다음으로`}>
                   <img
                     src={slide.image}
                     alt={slide.name}

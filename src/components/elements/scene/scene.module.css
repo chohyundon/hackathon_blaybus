@@ -106,6 +106,22 @@
   }
 }
 
+/* 활성 스타일만, 밑줄 없음 (퀴즈 탭 등) */
+.descriptionActiveNoUnderline {
+  color: #ffffff;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  height: 71%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
 .option {
   display: flex;
   height: 80%;
@@ -548,6 +564,32 @@
   }
 }
 
+.quizButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #236bf6 0%, #1a56d4 100%);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  border: none;
+  border-radius: 1000px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(35, 107, 246, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+.quizButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(35, 107, 246, 0.45);
+}
+.quizButton:active {
+  transform: translateY(0);
+}
+
 @keyframes aiDotsBounce {
   0%,
   100% {
@@ -962,12 +1004,9 @@
     display: none;
   }
 
-  .disassembleImage {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.35%;
-    margin-top: 1.2%;
-    margin-bottom: 2.5%;
-    padding-inline: 1.2%;
+  .quizButton {
+    padding: 8px 18px;
+    font-size: 14px;
   }
 }
 
@@ -996,6 +1035,12 @@
 
   .titleContainer {
     gap: 0.5%;
+    flex-wrap: wrap;
+  }
+
+  .quizButton {
+    padding: 8px 16px;
+    font-size: 13px;
   }
 
   .img {
@@ -1008,7 +1053,8 @@
   }
 
   .description,
-  .descriptionActive {
+  .descriptionActive,
+  .descriptionActiveNoUnderline {
     padding-inline: 0.6%;
     font-size: 87%;
   }
@@ -1152,24 +1198,12 @@
     display: none;
   }
 
-  .disassembleTitle {
-    font-size: 112%;
-  }
-
   .descriptionInfo {
     font-size: 100%;
   }
 
   .descriptionInfoText {
     font-size: 87%;
-  }
-
-  .disassembleImage {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5%;
-    margin-top: 1%;
-    margin-bottom: 2%;
-    padding-inline: 1%;
   }
 }
 
@@ -1193,7 +1227,8 @@
   }
 
   .description,
-  .descriptionActive {
+  .descriptionActive,
+  .descriptionActiveNoUnderline {
     padding-inline: 0.35%;
     font-size: 75%;
   }
@@ -1274,8 +1309,9 @@
     display: none;
   }
 
-  .disassembleTitle {
-    font-size: 100%;
+  .quizButton {
+    padding: 6px 12px;
+    font-size: 12px;
   }
 
   .sideTitle {
@@ -1291,13 +1327,5 @@
     height: 6%;
     min-height: 36px;
     font-size: 81%;
-  }
-
-  .disassembleImage {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.4%;
-    margin-top: 0.8%;
-    margin-bottom: 1.5%;
-    padding-inline: 0.8%;
   }
 }

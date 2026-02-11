@@ -551,7 +551,7 @@ export default function Scene() {
       </div>
       <div className={styles.controlsContainer}>
         <aside className={styles.ai}>
-          <p className={styles.aiTitle}>AI 어시스턴트</p>
+          <p className={styles.aiTitle}>AI 어시스트턴</p>
           {user?.userId ? (
             <>
               <div className={styles.aiInputText}>

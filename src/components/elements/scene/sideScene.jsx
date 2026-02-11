@@ -290,7 +290,7 @@ export default function SideScene({
     <aside className={styles.disassembleContainer}>
       <div className={styles.sideTitle}>
         <p className={styles.disassembleTitle} onClick={handleModal}>
-          {selectedObject}
+          {getPartData(selectedTitle)?.name ?? selectedTitle}
           <img src={dropdown} className={styles.icon} />
         </p>
         <img

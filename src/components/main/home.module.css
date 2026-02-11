@@ -376,6 +376,7 @@
   display: flex;
   box-sizing: border-box;
   position: relative;
+  cursor: pointer;
 }
 
 .homeMiddleSectionFeaturesListSwiper

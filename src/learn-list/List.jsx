@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Header from "../components/header/Header";
+import QuizModal from "../components/modal/QuizModal";
 import styles from "./list.module.css";
 import V4Engine from "../assets/V4.svg";
 import RobotArm from "../assets/RobotArm.svg";
@@ -9,6 +10,9 @@ import Suspension from "../assets/Suspension.svg";
 export default function LearnList() {
   const [showService, setShowService] = useState(true); // 학습 리스트 페이지이므로 true
   const [selectedObject, setSelectedObject] = useState("V4_Engine");
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizObject, setQuizObject] = useState(null);
+  const navigateAfterQuizRef = useRef(false);
 
   const items = [
     {
@@ -37,8 +41,30 @@ export default function LearnList() {
     },
   ];
 
+  const handleLearn = (name) => {
+    setSelectedObject(name);
+    setQuizObject(name);
+    navigateAfterQuizRef.current = true;
+    setShowQuiz(true);
+  };
+
+  const handleQuizClose = () => {
+    setShowQuiz(false);
+    if (navigateAfterQuizRef.current) {
+      navigateAfterQuizRef.current = false;
+      setShowService(false);
+    }
+  };
+
   return (
     <main className={styles.mainContainer}>
+      {showQuiz && (
+        <QuizModal
+          showQuiz={showQuiz}
+          setShowQuiz={handleQuizClose}
+          singleCategory={quizObject}
+        />
+      )}
       <Header
         showService={showService}
         setShowService={setShowService}
@@ -55,7 +81,11 @@ export default function LearnList() {
               <div className={styles.listItemText}>
                 <div className={styles.listItemMemoBox}>
                   <h3 className={styles.listItemTitle}>{item.name}</h3>
-                  <button className={styles.listItemButton}>학습하기</button>
+                  <button
+                    className={styles.listItemButton}
+                    onClick={() => handleLearn(item.name)}>
+                    학습하기
+                  </button>
                 </div>
                 <p className={styles.listItemDescriptionText}>핵심 설명</p>
                 <p className={styles.listItemDescription}>{item.description}</p>
