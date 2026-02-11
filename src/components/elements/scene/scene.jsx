@@ -331,7 +331,6 @@ export default function Scene() {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(bodyData),
       });
@@ -344,9 +343,6 @@ export default function Scene() {
         apiUrl(`/conversations?userId=${user?.userId}`),
         {
           credentials: "include",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
         }
       );
       const data = await getAiData.json();
