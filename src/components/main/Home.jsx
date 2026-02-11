@@ -76,6 +76,8 @@ AI를 통해 궁금한 내용을 질문해보세요`,
         const tokenRes = await fetch(apiUrl("/auth/token"), {
           credentials: "include",
           method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
         });
         const contentType = tokenRes.headers.get("content-type");
         if (!tokenRes.ok || !contentType?.includes("application/json")) {
@@ -112,12 +114,14 @@ AI를 통해 궁금한 내용을 질문해보세요`,
 
   const handleLogout = async () => {
     try {
-      await fetch(apiUrl(`/auth/logout`), {
+      await fetch(apiUrl("/auth/logout"), {
         credentials: "include",
         method: "POST",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
         },
+        body: JSON.stringify({}),
       });
       setUser(null);
       setAccessToken(null);
