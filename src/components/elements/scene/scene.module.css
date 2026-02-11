@@ -114,10 +114,9 @@
   border-radius: 1000px;
   box-sizing: border-box;
   justify-content: space-between;
-  gap: 20px;
   background-color: #303134;
+  align-items: center;
   white-space: nowrap;
-  padding: 8px;
 }
 
 .item {
@@ -960,8 +959,7 @@
   }
 
   .disassembleContainer {
-    width: 32%;
-    min-width: 280px;
+    display: none;
   }
 
   .disassembleImage {
@@ -1151,9 +1149,7 @@
   }
 
   .disassembleContainer {
-    width: 100%;
-    max-width: 31%;
-    min-width: 0;
+    display: none;
   }
 
   .disassembleTitle {
@@ -1275,8 +1271,7 @@
   }
 
   .disassembleContainer {
-    max-width: 22%;
-    min-width: 0;
+    display: none;
   }
 
   .disassembleTitle {
