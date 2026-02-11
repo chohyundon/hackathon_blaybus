@@ -1,12 +1,14 @@
 .mainContainer {
   width: 100%;
   height: 100vh;
+  max-height: 100vh;
   display: flex;
   align-items: stretch;
-  padding-inline: 40px;
+  padding: 6.5% 40px 0 40px;
   gap: 20px;
   background-color: #18191a;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .canvasWrapper {
@@ -36,7 +38,7 @@
 .content {
   display: flex;
   position: absolute;
-  top: 1.5%;
+  top: 1%;
   left: 0;
   right: 0;
   height: 7%;
@@ -78,7 +80,6 @@
   color: #cecfd2;
   white-space: nowrap;
   cursor: pointer;
-  padding-inline: 1.5%;
   height: 71%;
   text-align: center;
   display: flex;
@@ -107,52 +108,50 @@
 
 .option {
   display: flex;
-  height: 100%;
-  margin-left: 10%;
+  height: 80%;
+  margin-left: 2%;
   border: 1px solid #303134;
   border-radius: 1000px;
-  padding: 0.67%;
   box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background-color: #303134;
+  white-space: nowrap;
+  padding: 8px;
 }
 
 .item {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 15%;
-  min-width: 72px;
-  height: 77%;
   color: #ffffff;
   cursor: pointer;
+  padding: 12px 40px;
   background-color: blue;
   font-weight: 600;
   text-align: center;
   border-radius: 1000px;
+  height: 100%;
 }
 
 .noneItem {
-  width: 15%;
-  min-width: 72px;
-  padding-block: 21%;
   color: #cecfd2;
   cursor: pointer;
   display: flex;
+  padding: 12px 40px;
   justify-content: center;
   align-items: center;
   border-radius: 1000px;
 }
 
 .sceneContainer {
-  margin-bottom: 40px;
-  margin-top: 100px;
   display: flex;
   position: relative;
   flex: 1 1 70%;
   min-width: 0;
+  min-height: 0;
   max-width: 70%;
-  height: calc(100% - 140px);
+  height: 95%;
   background-color: #242528;
   border-radius: 32px;
   box-sizing: border-box;
@@ -232,13 +231,12 @@
 .disassembleContainer {
   position: absolute;
   right: 1%;
-  width: 454px;
+  width: 40%;
   height: calc(100% - 40px);
   margin-top: 20px;
   margin-bottom: 40px;
   background-color: #303134;
   border-radius: 32px;
-
   display: flex;
   flex-direction: column;
 }
@@ -285,16 +283,16 @@
 
 .disassembleImage {
   display: grid;
-  margin-top: 20px;
+  margin-top: 1.5%;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 1fr;
-  gap: 4px;
-  margin-bottom: 40px;
+  gap: 2px;
+  margin-bottom: 3%;
+  padding-inline: 10px;
+  box-sizing: border-box;
 }
 
 .descriptionTitle {
-  width: 100px;
-  height: 100px;
   background-color: white;
 }
 
@@ -304,10 +302,6 @@
   overflow: hidden; /* 중요 */
   gap: 4px;
   flex-shrink: 0;
-}
-
-.disassembleImage {
-  padding-inline: 20px;
 }
 
 .disassembleDescription {
@@ -372,9 +366,8 @@
   width: 30%;
   max-width: 30%;
   min-width: 0;
-  height: calc(100% - 130px);
-  margin-top: 100px;
-  margin-bottom: 40px;
+  min-height: 0;
+  height: 95%;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -549,7 +542,7 @@
   line-height: 150%;
   background-color: #236bf6;
   border-radius: 1000px;
-  padding: 0.83% 1.67%;
+  padding: 8px 16px;
   letter-spacing: -0.4px;
   &:hover {
     opacity: 0.7;
@@ -814,10 +807,18 @@
   justify-content: center;
   background: #3d3f43;
   cursor: pointer;
+  width: 100%;
+  aspect-ratio: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .descriptionImage {
   border-radius: 2px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .modal {
@@ -882,8 +883,12 @@
   justify-content: center;
   background: #3d3f43;
   cursor: pointer;
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 100px;
+  max-height: 100px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .descriptionSeparator {
@@ -896,25 +901,21 @@
 /* ---------- 반응형 ---------- */
 @media (max-width: 1200px) {
   .mainContainer {
-    padding-inline: 24px;
+    padding: 6.5% 24px 0 24px;
     gap: 16px;
   }
 
   .sceneContainer {
     flex: 1 1 65%;
     max-width: 65%;
-    margin-top: 80px;
-    margin-bottom: 24px;
-    height: calc(100% - 124px);
+    height: 100%;
   }
 
   .controlsContainer {
     flex: 0 0 35%;
     width: 35%;
     max-width: 35%;
-    margin-top: 80px;
-    margin-bottom: 24px;
-    height: calc(100% - 124px);
+    height: 100%;
   }
 
   .bottomButtonContainer {
@@ -927,16 +928,48 @@
     transform: translate(-20%, 5%);
   }
 
+  .content {
+    padding-inline: 1.5%;
+  }
+
+  .title {
+    font-size: 175%;
+  }
+
+  .option {
+    width: 42%;
+    gap: 1%;
+    padding: 0.5%;
+  }
+
+  .item,
+  .noneItem {
+    padding: 0.8% 2.2%;
+  }
+
   .aiTitle {
-    font-size: 20px;
+    font-size: 125%;
   }
 
   .tabActive {
-    font-size: 18px;
+    font-size: 112%;
   }
 
   .tabInactive {
-    font-size: 16px;
+    font-size: 100%;
+  }
+
+  .disassembleContainer {
+    width: 32%;
+    min-width: 280px;
+  }
+
+  .disassembleImage {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.35%;
+    margin-top: 1.2%;
+    margin-bottom: 2.5%;
+    padding-inline: 1.2%;
   }
 }
 
@@ -950,23 +983,75 @@
 @media (max-width: 900px) {
   .mainContainer {
     flex-direction: column;
-    padding-inline: 16px;
-    gap: 12px;
+    padding: 5% 1.2% 1.2% 1.2%;
+    gap: 1%;
     min-height: 100vh;
     height: auto;
+    overflow-y: auto;
+  }
+
+  .content {
+    height: auto;
+    min-height: 5vh;
+    padding-inline: 1%;
+  }
+
+  .titleContainer {
+    gap: 0.5%;
+  }
+
+  .img {
+    min-width: 2.5%;
+    min-height: 2.5%;
+  }
+
+  .title {
+    font-size: 150%;
+  }
+
+  .description,
+  .descriptionActive {
+    padding-inline: 0.6%;
+    font-size: 87%;
+  }
+
+  .descriptionSeparator {
+    padding-inline: 0.5%;
+  }
+
+  .option {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    gap: 0.6%;
+    padding: 0.5%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .item,
+  .noneItem {
+    padding: 0.6% 1.5%;
+    font-size: 81%;
+    min-width: 70px;
+  }
+
+  .loginButtonText,
+  .loginText {
+    font-size: 87%;
   }
 
   .zoomInIcon {
-    top: 16px;
-    left: 16px;
+    top: 1.5%;
+    left: 1.2%;
   }
 
   .sceneContainer {
     flex: none;
     max-width: 100%;
     width: 100%;
-    margin-top: 72px;
-    margin-bottom: 16px;
+    margin-top: 0;
+    margin-bottom: 1.2%;
     min-height: 50vh;
     height: min(55vh, 400px);
   }
@@ -976,7 +1061,7 @@
     width: 100%;
     max-width: 100%;
     margin-top: 0;
-    margin-bottom: 16px;
+    margin-bottom: 1.2%;
     height: auto;
     min-height: 40vh;
   }
@@ -985,9 +1070,9 @@
     width: 90%;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 16px;
+    bottom: 1.2%;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 0.6%;
     justify-content: center;
   }
 
@@ -1012,137 +1097,212 @@
 
   .ai {
     height: auto;
-    min-height: 200px;
-    padding: 12px 16px;
+    min-height: 18vh;
+    padding: 1% 1.2%;
   }
 
   .aiTitle {
-    font-size: 18px;
+    font-size: 112%;
   }
 
   .input {
-    height: 48px;
-    font-size: 14px;
+    height: 7%;
+    min-height: 40px;
+    font-size: 87%;
   }
 
   .arrowIcon {
-    width: 36px;
-    height: 36px;
+    width: 2.5%;
+    min-width: 28px;
+    height: 2.5%;
+    min-height: 28px;
   }
 
   .memoContainer {
-    min-height: 220px;
+    min-height: 20vh;
   }
 
   .textSection {
-    padding: 16px;
+    padding: 1.2%;
   }
 
   .tabActive {
-    font-size: 16px;
-    padding-left: 16px;
+    font-size: 100%;
+    padding-left: 1.2%;
   }
 
   .tabInactive {
-    font-size: 14px;
-    padding-left: 16px;
+    font-size: 87%;
+    padding-left: 1.2%;
   }
 
   .textArea {
-    font-size: 14px;
-    min-height: 80px;
+    font-size: 87%;
+    min-height: 8vh;
   }
 
   .memoWrapper {
-    width: 150px;
+    width: 13%;
+    min-width: 110px;
   }
 
   .memoContent {
-    font-size: 14px;
+    font-size: 87%;
   }
 
   .disassembleContainer {
     width: 100%;
-    max-width: 280px;
+    max-width: 31%;
     min-width: 0;
   }
 
   .disassembleTitle {
-    font-size: 18px;
+    font-size: 112%;
   }
 
   .descriptionInfo {
-    font-size: 16px;
+    font-size: 100%;
   }
 
   .descriptionInfoText {
-    font-size: 14px;
+    font-size: 87%;
+  }
+
+  .disassembleImage {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5%;
+    margin-top: 1%;
+    margin-bottom: 2%;
+    padding-inline: 1%;
   }
 }
 
 @media (max-width: 600px) {
   .mainContainer {
-    padding-inline: 12px;
+    padding: 4% 1% 1% 1%;
+  }
+
+  .content {
+    min-height: 4.5vh;
+    padding-inline: 0.5%;
+  }
+
+  .img {
+    min-width: 2%;
+    min-height: 2%;
+  }
+
+  .title {
+    font-size: 130%;
+  }
+
+  .description,
+  .descriptionActive {
+    padding-inline: 0.35%;
+    font-size: 75%;
+  }
+
+  .option {
+    padding: 0.35%;
+    gap: 0.5%;
+  }
+
+  .item,
+  .noneItem {
+    padding: 0.5% 1%;
+    font-size: 75%;
+    min-width: 60px;
+  }
+
+  .loginButtonText,
+  .loginText {
+    font-size: 81%;
+  }
+
+  .loginButtonText {
+    padding: 0.5% 1%;
   }
 
   .zoomInIcon {
-    top: 12px;
-    left: 12px;
+    top: 1%;
+    left: 1%;
   }
 
   .sceneContainer {
-    margin-top: 64px;
+    margin-top: 0;
     min-height: 45vh;
     height: min(50vh, 360px);
-    border-radius: 20px;
+    border-radius: 1.5%;
   }
 
   .bottomButtonContainer {
     width: 95%;
-    bottom: 12px;
+    bottom: 1%;
   }
 
   .bottomActive,
   .bottomButton {
-    padding: 6px 10px;
-    font-size: 13px;
+    padding: 0.5% 0.8%;
+    font-size: 81%;
   }
 
   .buttonContent {
-    gap: 8px;
-    padding: 6px;
+    gap: 0.6%;
+    padding: 0.5%;
   }
 
   .percent {
-    font-size: 12px;
+    font-size: 75%;
   }
 
   .aiTitle {
-    font-size: 16px;
+    font-size: 100%;
   }
 
   .tabActive {
-    font-size: 15px;
+    font-size: 94%;
+    padding-left: 1%;
   }
 
   .tabInactive {
-    font-size: 13px;
+    font-size: 81%;
+    padding-left: 1%;
   }
 
   .memoWrapper {
-    width: 140px;
+    width: 12%;
+    min-width: 100px;
   }
 
   .disassembleContainer {
-    max-width: 240px;
+    max-width: 22%;
+    min-width: 0;
   }
 
   .disassembleTitle {
-    font-size: 16px;
+    font-size: 100%;
   }
 
   .sideTitle {
-    padding-inline: 12px;
-    padding-top: 20px;
+    padding-inline: 1%;
+    padding-top: 1.5%;
+  }
+
+  .textSection {
+    padding: 1%;
+  }
+
+  .input {
+    height: 6%;
+    min-height: 36px;
+    font-size: 81%;
+  }
+
+  .disassembleImage {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4%;
+    margin-top: 0.8%;
+    margin-bottom: 1.5%;
+    padding-inline: 0.8%;
   }
 }

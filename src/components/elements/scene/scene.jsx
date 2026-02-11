@@ -310,8 +310,6 @@ export default function Scene() {
     );
   };
 
-  console.log(memoStore);
-
   const handleSubmitAi = async (e) => {
     e.preventDefault();
     const prompt = aiValue.trim();

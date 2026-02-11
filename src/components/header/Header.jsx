@@ -3,13 +3,14 @@ import styles from "../../components/elements/scene/scene.module.css";
 import logo from "../../assets/logo.svg";
 import { useAuthStore } from "../../store/useAuthStore";
 import { apiUrl } from "../../api/config";
+import LoginModal from "../modal/LoginModal";
+import { useState } from "react";
 
 export default function Header({
   showService,
   setShowService,
   selectedObject,
   setSelectedObject,
-  handleLogin,
   accessToken,
 }) {
   const object = ["V4_Engine", "Robot Arm", "Drone", "Suspension"];
@@ -17,6 +18,7 @@ export default function Header({
   const pathname = useLocation();
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
+  const [show, setShow] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -35,12 +37,12 @@ export default function Header({
   };
 
   const onLoginClick = () => {
-    if (handleLogin) handleLogin();
-    else navigate("/");
+    setShow(true);
   };
 
   return (
     <nav className={styles.content}>
+      {show && <LoginModal setShow={setShow} show={show} />}
       <div className={styles.titleContainer}>
         <img src={logo} className={styles.img} />
         <p className={styles.title} onClick={() => navigate("/")}>
