@@ -36,32 +36,36 @@
 .content {
   display: flex;
   position: absolute;
-  top: 15px;
+  top: 1.5%;
   left: 0;
   right: 0;
-  height: 70px;
+  height: 7%;
+  min-height: 56px;
   width: 100%;
   max-width: 100%;
-  padding-inline: 24px;
+  padding-inline: 2%;
   box-sizing: border-box;
 }
 
 .titleContainer {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 1%;
+  width: 100%;
   min-width: 0;
 }
 
 .img {
-  width: 48px;
-  height: 48px;
+  width: 4%;
+  min-width: 32px;
+  height: 4%;
+  min-height: 32px;
   color: #cecfd2;
 }
 
 .title {
   text-align: center;
-  font-size: 32px;
+  font-size: 200%;
   font-weight: bold;
   color: #ffffff;
   cursor: pointer;
@@ -74,8 +78,8 @@
   color: #cecfd2;
   white-space: nowrap;
   cursor: pointer;
-  padding-inline: 20px;
-  height: 50px;
+  padding-inline: 1.5%;
+  height: 71%;
   text-align: center;
   display: flex;
   align-items: center;
@@ -91,7 +95,7 @@
   border-bottom: 2px solid white;
   white-space: nowrap;
   cursor: pointer;
-  height: 50px;
+  height: 71%;
   text-align: center;
   display: flex;
   align-items: center;
@@ -103,13 +107,12 @@
 
 .option {
   display: flex;
-  height: 70px;
+  height: 100%;
   margin-left: 10%;
   border: 1px solid #303134;
   border-radius: 1000px;
-  padding: 8px;
+  padding: 0.67%;
   box-sizing: border-box;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -118,8 +121,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 177px;
-  height: 54px;
+  width: 15%;
+  min-width: 72px;
+  height: 77%;
   color: #ffffff;
   cursor: pointer;
   background-color: blue;
@@ -129,8 +133,9 @@
 }
 
 .noneItem {
-  width: 177px;
-  padding-block: 15px;
+  width: 15%;
+  min-width: 72px;
+  padding-block: 21%;
   color: #cecfd2;
   cursor: pointer;
   display: flex;
@@ -539,12 +544,12 @@
 
 .loginButtonText {
   color: #fff;
-  font-size: 16px;
+  font-size: 100%;
   font-weight: 500;
   line-height: 150%;
   background-color: #236bf6;
   border-radius: 1000px;
-  padding: 10px 20px;
+  padding: 0.83% 1.67%;
   letter-spacing: -0.4px;
   &:hover {
     opacity: 0.7;
@@ -642,7 +647,7 @@
 .loginButtonContainer {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.67%;
   white-space: nowrap;
 }
 
@@ -675,7 +680,7 @@
 .loginText {
   cursor: pointer;
   color: #fff;
-  font-size: 16px;
+  font-size: 100%;
   font-weight: 500;
   line-height: 150%;
   letter-spacing: -0.4px;
@@ -884,8 +889,8 @@
 .descriptionSeparator {
   color: #cecfd2;
   width: 1px;
-  height: 16px;
-  padding-inline: 20px;
+  height: 23%;
+  padding-inline: 1.5%;
 }
 
 /* ---------- 반응형 ---------- */

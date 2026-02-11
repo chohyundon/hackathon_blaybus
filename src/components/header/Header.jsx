@@ -27,8 +27,10 @@ export default function Header({
           Authorization: `Bearer ${user.accessToken}`,
         },
       });
+      setUser(null);
     } catch (e) {
       console.warn("logout failed", e);
+      setUser(null);
     }
   };
 
