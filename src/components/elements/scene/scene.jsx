@@ -342,6 +342,7 @@ export default function Scene() {
         }
       );
       const data = await getAiData.json();
+      console.log("data", data);
       const list = Array.isArray(data)
         ? data
         : data?.data ?? data?.conversations ?? [];
