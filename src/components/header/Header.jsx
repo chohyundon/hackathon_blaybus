@@ -63,6 +63,7 @@ export default function Header({
               : styles.description
           }
           onClick={() => {
+            setShowQuiz(false);
             setShowService(false);
             navigate("/scene");
           }}>
@@ -75,6 +76,7 @@ export default function Header({
               : styles.description
           }
           onClick={() => {
+            setShowQuiz(false);
             setShowService(true);
             navigate("/learn-list");
           }}>
@@ -82,9 +84,7 @@ export default function Header({
         </p>
         <p
           className={
-            showQuiz && showService
-              ? styles.descriptionActive
-              : styles.description
+            showQuiz ? styles.descriptionActiveNoUnderline : styles.description
           }
           onClick={handleQuiz}>
           퀴즈

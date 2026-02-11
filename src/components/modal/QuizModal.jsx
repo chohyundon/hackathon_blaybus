@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import styles from "./quizModal.module.css";
 import { quiz } from "../mock/quiz";
+import quizIcon from "../../assets/logo.svg";
 
 const CATEGORY_LABELS = {
   suspension: "서스펜션",
@@ -22,7 +23,12 @@ function pickOneRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export default function QuizModal({ showQuiz, setShowQuiz, singleCategory }) {
+export default function QuizModal({
+  showQuiz,
+  setShowQuiz,
+  singleCategory,
+  onProceedToLearning,
+}) {
   const [userAnswers, setUserAnswers] = useState({});
 
   const questionsByCategory = useMemo(() => {
@@ -85,7 +91,9 @@ export default function QuizModal({ showQuiz, setShowQuiz, singleCategory }) {
           ×
         </button>
         <div className={styles.quizModalHeader}>
-          <div className={styles.quizModalIcon}>📝</div>
+          <div className={styles.quizModalIcon}>
+            <img src={quizIcon} alt="Quiz Icon" />
+          </div>
           <h1 id="quiz-modal-title" className={styles.quizModalTitle}>
             {singleCategory
               ? `${
@@ -124,7 +132,6 @@ export default function QuizModal({ showQuiz, setShowQuiz, singleCategory }) {
                         else if (isSelected && !isCorrect)
                           optionClass = styles.quizModalOptionWrong;
                       }
-
                       return (
                         <button
                           key={idx}
@@ -149,11 +156,22 @@ export default function QuizModal({ showQuiz, setShowQuiz, singleCategory }) {
             })}
           </div>
           <div className={styles.quizModalButtons}>
+            {singleCategory && onProceedToLearning && (
+              <button
+                type="button"
+                className={styles.quizModalButtonPrimary}
+                onClick={() => {
+                  onProceedToLearning();
+                  setShowQuiz(false);
+                }}>
+                퀴즈 풀고 학습하러 가기
+              </button>
+            )}
             <button
               type="button"
               className={styles.quizModalButtonSecondary}
               onClick={handleClose}>
-              닫기
+              {singleCategory ? "나중에 할게요" : "닫기"}
             </button>
           </div>
         </div>

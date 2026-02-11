@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Header from "../components/header/Header";
 import QuizModal from "../components/modal/QuizModal";
 import styles from "./list.module.css";
@@ -12,7 +12,6 @@ export default function LearnList() {
   const [selectedObject, setSelectedObject] = useState("V4_Engine");
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizObject, setQuizObject] = useState(null);
-  const navigateAfterQuizRef = useRef(false);
 
   const items = [
     {
@@ -44,16 +43,13 @@ export default function LearnList() {
   const handleLearn = (name) => {
     setSelectedObject(name);
     setQuizObject(name);
-    navigateAfterQuizRef.current = true;
     setShowQuiz(true);
   };
 
-  const handleQuizClose = () => {
+  /** 퀴즈에서 "퀴즈 시작하기" 눌렀을 때만 씬(서비스 자세히)으로 이동 */
+  const handleProceedToLearning = () => {
     setShowQuiz(false);
-    if (navigateAfterQuizRef.current) {
-      navigateAfterQuizRef.current = false;
-      setShowService(false);
-    }
+    setShowService(false);
   };
 
   return (
@@ -61,8 +57,9 @@ export default function LearnList() {
       {showQuiz && (
         <QuizModal
           showQuiz={showQuiz}
-          setShowQuiz={handleQuizClose}
+          setShowQuiz={setShowQuiz}
           singleCategory={quizObject}
+          onProceedToLearning={handleProceedToLearning}
         />
       )}
       <Header
