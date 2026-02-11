@@ -329,7 +329,10 @@ export default function Scene() {
       const res = await fetch(apiUrl(`/chat?userId=${user?.userId}`), {
         method: "POST",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify(bodyData),
       });
 
@@ -339,6 +342,9 @@ export default function Scene() {
         apiUrl(`/conversations?userId=${user?.userId}`),
         {
           credentials: "include",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
       const data = await getAiData.json();
