@@ -33,6 +33,7 @@ export default function Home() {
   const [featuresSwiper, setFeaturesSwiper] = useState(null);
   const featuresSwiperPrevRef = useRef(null);
   const featuresSwiperNextRef = useRef(null);
+  const [accessToken, setAccessToken] = useState(null);
 
   const mainFeatures = [
     {
@@ -83,6 +84,7 @@ AI를 통해 궁금한 내용을 질문해보세요`,
         }
         const data = await tokenRes.json();
         console.log("data", data);
+        setAccessToken(data.accessToken);
         if (data?.accessToken) {
           const meRes = await fetch(apiUrl("/users/me"), {
             credentials: "include",
